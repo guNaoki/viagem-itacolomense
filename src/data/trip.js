@@ -207,7 +207,8 @@ export const VIBES = {
     budget: {
       label: 'Ody Park no domingo',
       items: [
-        { key: 'host', label: 'Ingressos (12 × R$ 110)', min: 1320, max: 1320 },
+        // ingresso é por pessoa: o valor acompanha o número de pessoas
+        { key: 'host', label: 'Ingressos', perPerson: 110 },
         { key: 'trans', label: 'Van', min: 1600, max: 1600 },
         { key: 'fun', label: 'Quiosque', min: 350, max: 350 },
       ],

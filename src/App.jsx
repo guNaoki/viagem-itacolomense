@@ -30,7 +30,6 @@ function Page() {
   return (
     <>
       <Sky />
-      <div className="grain" aria-hidden="true" />
       <TopBar />
       <main>
         <Hero />

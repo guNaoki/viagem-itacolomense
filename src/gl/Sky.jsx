@@ -34,7 +34,9 @@ float noise(vec2 p){
   vec2 u = f*f*(3.0-2.0*f);
   return mix(mix(hash(i), hash(i+vec2(1.0,0.0)), u.x), mix(hash(i+vec2(0.0,1.0)), hash(i+vec2(1.0,1.0)), u.x), u.y);
 }
-float fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i<5;i++){ v += a*noise(p); p *= 2.03; a *= 0.5; } return v; }
+float fbm(vec2 p){ float v = 0.0; float a = 0.5; for(int i=0;i<4;i++){ v += a*noise(p); p *= 2.03; a *= 0.5; } return v; }
+// versão barata (3 oitavas) pro horizonte
+float fbm3(vec2 p){ float v = 0.5*noise(p); p *= 2.03; v += 0.25*noise(p); p *= 2.03; v += 0.125*noise(p); return v; }
 
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes;
@@ -84,7 +86,8 @@ void main(){
   col += vec3(1.0, 0.8, 0.55) * exp(-md*10.0) * 0.08 * n * uMoon;
   col = mix(col, vec3(1.0, 0.93, 0.78), moon * n * 0.85 * uMoon);
 
-  // ---------- estrelas ----------
+  // ---------- estrelas (só calcula de noite) ----------
+  if (n > 0.5) {
   vec2 sg = p * 70.0;
   vec2 si = floor(sg);
   vec2 sf = fract(sg) - 0.5;
@@ -93,20 +96,25 @@ void main(){
   float star = step(0.982, h) * smoothstep(0.16, 0.0, length(sf + jit*0.6));
   star *= 0.45 + 0.55*sin(uTime*1.7 + h*60.0);
   col += vec3(1.0, 0.92, 0.78) * star * smoothstep(0.55, 1.0, n) * smoothstep(0.22, 0.55, g);
+  }
 
   // ---------- horizonte (muda com a vibe) ----------
   float x = p.x;
-  float hills = 0.12 + 0.06*fbm(vec2(x*1.15, 1.7)) + 0.025*sin(x*2.3 + 1.0);
-  float trees = 0.095 + 0.05*fbm(vec2(x*7.0, 3.1));
-  float cell = floor(x*2.6);
-  float tri = abs(fract(x*2.6) - 0.5) * 2.0;
-  float isTent = step(0.45, hash(vec2(cell, 9.0)));
-  trees = max(trees, 0.075 + (1.0 - tri)*0.085*isTent);
-  float waves = 0.095 + 0.013*sin(x*8.0 + uTime*1.3) + 0.007*sin(x*21.0 - uTime*2.2) + 0.004*sin(x*47.0 + uTime*3.0);
+  float hills = 0.0;
+  float trees = 0.0;
+  float waves = 0.0;
+  if (uShape.x > 0.001) hills = 0.12 + 0.06*fbm3(vec2(x*1.15, 1.7)) + 0.025*sin(x*2.3 + 1.0);
+  if (uShape.y > 0.001) {
+    trees = 0.095 + 0.05*fbm3(vec2(x*7.0, 3.1));
+    float tri = abs(fract(x*2.6) - 0.5) * 2.0;
+    float isTent = step(0.45, hash(vec2(floor(x*2.6), 9.0)));
+    trees = max(trees, 0.075 + (1.0 - tri)*0.085*isTent);
+  }
+  if (uShape.z > 0.001) waves = 0.095 + 0.013*sin(x*8.0 + uTime*1.3) + 0.007*sin(x*21.0 - uTime*2.2) + 0.004*sin(x*47.0 + uTime*3.0);
   float wsum = max(uShape.x + uShape.y + uShape.z, 0.001);
   float hz = (hills*uShape.x + trees*uShape.y + waves*uShape.z) / wsum;
   hz *= mix(1.0, 0.82, portrait);
-  float hz2 = hz + 0.05 + 0.035*fbm(vec2(x*0.7 + 5.0, 2.0));
+  float hz2 = hz + 0.05 + 0.035*fbm3(vec2(x*0.7 + 5.0, 2.0));
 
   vec3 silBackDay = mix(col, uAccent, 0.13);
   vec3 silFrontDay = mix(day, uAccent, 0.32);
@@ -116,10 +124,10 @@ void main(){
   col = mix(col, mix(silBackDay, mix(silNight, col, 0.45), n), l2 * 0.9);
   col = mix(col, mix(silFrontDay, silNight, smoothstep(0.1, 0.8, n)), l1);
   // brilho da água no Ody
-  float spark = step(0.93, noise(vec2(x*40.0, g*90.0 - uTime*0.8))) * l1 * uShape.z * (1.0 - n);
-  col += spark * 0.25;
+  if (uShape.z > 0.001 && l1 > 0.0) col += step(0.93, noise(vec2(x*40.0, g*90.0 - uTime*0.8))) * l1 * uShape.z * (1.0 - n) * 0.25;
 
-  // ---------- fogueira + fagulhas ----------
+  // ---------- fogueira + fagulhas (só de noite) ----------
+  if (n > 0.4 && uFire > 0.01) {
   float flick = 0.8 + 0.2*noise(vec2(uTime*4.0, 1.0));
   float fd = length((p - vec2(0.0, 0.02)) * vec2(1.0, 1.7));
   col += vec3(1.0, 0.4, 0.08) * exp(-fd*3.4) * 0.6 * smoothstep(0.4, 1.0, n) * uFire * flick;
@@ -131,9 +139,11 @@ void main(){
     float s = smoothstep(0.007, 0.0, length(p - q)) * (1.0 - t);
     col += vec3(1.0, 0.62, 0.22) * s * smoothstep(0.5, 1.0, n) * uFire * 2.0;
   }
+  }
 
   // vinheta da noite
   col *= 1.0 - 0.28*n*smoothstep(0.3, 0.95, length(uv - vec2(0.5, 0.45)));
+  col += (hash(gl_FragCoord.xy + floor(uTime*12.0)) - 0.5) * mix(0.045, 0.03, n);
   gl_FragColor = vec4(col, 1.0);
 }
 `
@@ -180,14 +190,21 @@ export default function Sky() {
       (k) => (U[k] = gl.getUniformLocation(prog, k)),
     )
 
-    const mobile = matchMedia('(max-width: 760px)').matches
-    const scale = Math.min(devicePixelRatio || 1, 1.5) * (mobile ? 0.55 : 0.7)
+    // céu é suave: dá pra renderizar em resolução menor e escalar sem perder nada
+    const mobile = matchMedia('(max-width: 760px), (pointer: coarse)').matches
+    const scale = mobile ? 0.42 * Math.min(devicePixelRatio || 1, 2) : 0.6 * Math.min(devicePixelRatio || 1, 1.5)
+    let lastW = 0
+    let lastH = 0
     const resize = () => {
-      // usa a altura "grande" no mobile pra não pular quando a barra do navegador some
+      // no celular a barra do navegador muda a altura o tempo todo: só refaz o canvas
+      // quando a largura muda ou a altura cresce de verdade
       const w = innerWidth
       const h = Math.max(innerHeight, document.documentElement.clientHeight)
+      if (w === lastW && h <= lastH) return
+      lastW = w
+      lastH = Math.max(h, lastH)
       canvas.width = Math.round(w * scale)
-      canvas.height = Math.round(h * scale)
+      canvas.height = Math.round(lastH * scale)
       gl.viewport(0, 0, canvas.width, canvas.height)
     }
     resize()
@@ -205,8 +222,14 @@ export default function Sky() {
     let raf
     let running = true
     const t0 = performance.now()
+    // celular: 30 quadros/s bastam pro céu e liberam a GPU pra rolagem
+    const minDt = mobile ? 1000 / 31 : 0
+    let last = 0
     const frame = (now) => {
       if (!running) return
+      raf = requestAnimationFrame(frame)
+      if (now - last < minDt) return
+      last = now
       sky.px += (target.x - sky.px) * 0.04
       sky.py += (target.y - sky.py) * 0.04
       gl.uniform2f(U.uRes, canvas.width, canvas.height)
@@ -220,7 +243,6 @@ export default function Sky() {
       gl.uniform1f(U.uFire, sky.fire)
       gl.uniform1f(U.uMoon, sky.moon)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
-      raf = requestAnimationFrame(frame)
     }
     raf = requestAnimationFrame(frame)
 

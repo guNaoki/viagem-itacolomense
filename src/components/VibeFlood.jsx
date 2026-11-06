@@ -30,7 +30,7 @@ export default function VibeFlood() {
         .from(split.chars, { yPercent: 105, stagger: 0.022, duration: 0.6, ease: 'expo.out' }, '-=.35')
         .add(() => {
           setVibe(flood.to)
-          if (flood.scrollTo) setTimeout(() => scrollToEl(flood.scrollTo, { immediate: true, offset: -84 }), 60)
+          if (flood.scrollTo) setTimeout(() => scrollToEl(flood.scrollTo, { immediate: true, offset: flood.scrollTo === '#vibe' ? -10 : -84 }), 80)
         })
         .to(el, { yPercent: -100, duration: 0.85, ease: 'expo.inOut' }, '+=.45')
         .set(el, { autoAlpha: 0 })

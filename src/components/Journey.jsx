@@ -91,9 +91,12 @@ function Stage({ steps, v, setMode }) {
       const prog = { p: 0 }
       const apply = () => {
         carTween.progress(prog.p)
-        gsap.set(fill, { drawSVG: `0% ${prog.p * 100}%` })
+        // pathLength=1: o traço vai de 0 a 1 sem medir o caminho a cada quadro
+        fill.style.strokeDasharray = `${prog.p} 1`
       }
       apply()
+      // um único "perseguidor" suave pro carro (em vez de criar um tween a cada rolagem)
+      const toP = gsap.quickTo(prog, 'p', { duration: reduceMotion() ? 0.01 : 0.7, ease: 'power3.out', onUpdate: apply })
       const cur = { i: -1, ph: -1 }
       const ease = gsap.parseEase('power2.inOut')
 
@@ -119,7 +122,7 @@ function Stage({ steps, v, setMode }) {
           }
           // o carro fica parado na parada e só anda no fim dela
           const move = i < N - 1 ? ease(Math.max(0, (t - 0.86) / 0.14)) : 0
-          gsap.to(prog, { p: (i + move) / (N - 1), duration: reduceMotion() ? 0 : 0.7, ease: 'power3.out', overwrite: true, onUpdate: apply })
+          toP((i + move) / (N - 1))
         },
         onEnter: () => setMode(steps[Math.max(0, cur.i)].time),
         // a lua sairia em cima do trajeto: some enquanto a tela está travada
@@ -132,17 +135,15 @@ function Stage({ steps, v, setMode }) {
     { scope: root, dependencies: [d], revertOnUpdate: true },
   )
 
-  // troca de parada: texto e fotos entram
-  useGSAP(
-    () => {
-      if (reduceMotion()) return
-      gsap.from('.st__copy > *', { y: 34, autoAlpha: 0, stagger: 0.06, duration: 0.8, ease: 'expo.out' })
-      gsap.from('.stage__stack', { y: 90, rotate: 8, autoAlpha: 0, duration: 0.9, ease: 'back.out(1.3)' })
-    },
-    { scope: root, dependencies: [pos.i] },
-  )
-
-  const s = steps[pos.i]
+  // troca de parada em camadas: a anterior sai com fade enquanto a nova entra
+  const [layers, setLayers] = useState([{ i: 0, id: 0 }])
+  const lastPh = useRef({})
+  lastPh.current[pos.i] = pos.ph
+  useEffect(() => {
+    setLayers((ls) => (ls[ls.length - 1].i === pos.i ? ls : [...ls.map((l) => ({ ...l, out: true })), { i: pos.i, id: Date.now() }]))
+    const t = setTimeout(() => setLayers((ls) => ls.filter((l) => !l.out)), 700)
+    return () => clearTimeout(t)
+  }, [pos.i])
   return (
     <div className="stage-wrap">
     <div className="stage" ref={root}>
@@ -150,7 +151,7 @@ function Stage({ steps, v, setMode }) {
         <div className="mr" ref={routeBox}>
           <svg className="mr__svg" width={W} height={H} viewBox={`0 0 ${W || 1} ${H}`} aria-hidden="true">
             <path d={d} className="mr__ghost" />
-            <path d={d} className="mr__fill" />
+            <path d={d} className="mr__fill" pathLength="1" />
             {W > 0 &&
               nodes.map(([x, y], i) => (
                 <g key={i} className={`mr__node ${i < pos.i ? 'is-past' : ''} ${i === pos.i ? 'is-now' : ''}`}>
@@ -173,26 +174,38 @@ function Stage({ steps, v, setMode }) {
       </div>
 
       <div className="stage__body">
-        <div className="stage__stack" key={'k' + pos.i}>
-          <Stack photos={photos[pos.i]} idx={pos.ph} scene={s.scene} />
-        </div>
-        <div className="st__copy" key={'c' + pos.i}>
-          <p className="st__count hand">
-            parada {pos.i + 1} <span>de {N}</span>
-          </p>
-          <p className="st__when hand">
-            <Icon name={s.icon} size={20} /> {s.when}
-          </p>
-          <h3 className="st__title display">{s.title}</h3>
-          <p className="st__text">{s.text}</p>
-          {pos.i === 0 && <p className="st__hint hand" aria-hidden="true">rola pra seguir viagem ↓</p>}
-          {photos[pos.i].length > 1 && (
-            <div className="st__dots" aria-hidden="true">
-              {photos[pos.i].map((_, k) => (
-                <i key={k} className={k === pos.ph ? 'is-on' : ''} />
-              ))}
+        <div className="stage__stacks">
+          {layers.map((l) => (
+            <div className={`stage__stack ${l.out ? 'is-out' : 'is-in'}`} key={l.id} aria-hidden={l.out || undefined}>
+              <Stack photos={photos[l.i]} idx={l.out ? lastPh.current[l.i] ?? 0 : pos.ph} scene={steps[l.i].scene} />
             </div>
-          )}
+          ))}
+        </div>
+        <div className="st__copies">
+          {layers.map((l) => {
+            const s = steps[l.i]
+            const ph = l.out ? lastPh.current[l.i] ?? 0 : pos.ph
+            return (
+              <div className={`st__copy ${l.out ? 'is-out' : 'is-in'}`} key={l.id} aria-hidden={l.out || undefined}>
+                <p className="st__count hand">
+                  parada {l.i + 1} <span>de {N}</span>
+                </p>
+                <p className="st__when hand">
+                  <Icon name={s.icon} size={20} /> {s.when}
+                </p>
+                <h3 className="st__title display">{s.title}</h3>
+                <p className="st__text">{s.text}</p>
+                {l.i === 0 && <p className="st__hint hand" aria-hidden="true">rola pra seguir viagem ↓</p>}
+                {photos[l.i].length > 1 && (
+                  <div className="st__dots" aria-hidden="true">
+                    {photos[l.i].map((_, k) => (
+                      <i key={k} className={k === ph ? 'is-on' : ''} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

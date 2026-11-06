@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTrip } from '../lib/trip-context'
 import { VIBES, VIBE_ORDER } from '../data/trip'
-import { scrollToEl } from '../lib/scroll'
+import { scrollToEl, onScrollY } from '../lib/scroll'
 import { gsap, ScrollTrigger, useGSAP } from '../lib/gsap'
 import './Dock.css'
 
@@ -34,10 +34,8 @@ export default function Dock() {
   }, [])
 
   useEffect(() => {
-    const on = () => setShown(scrollY > innerHeight * 0.55)
-    on()
-    addEventListener('scroll', on, { passive: true })
-    return () => removeEventListener('scroll', on)
+    const h = innerHeight * 0.55
+    return onScrollY((y) => setShown(y > h))
   }, [])
 
   // a "gota" desliza até a vibe escolhida
@@ -87,7 +85,7 @@ export default function Dock() {
               className="dock__vibe"
               onClick={(e) => {
                 const r = e.currentTarget.getBoundingClientRect()
-                chooseVibe(id, { x: r.left + r.width / 2, y: r.top + r.height / 2 })
+                chooseVibe(id, { x: r.left + r.width / 2, y: r.top + r.height / 2, scrollTo: '#vibe' })
               }}
             >
               <i className="dock__dot" aria-hidden="true" />

@@ -4,20 +4,50 @@ import { sky } from '../gl/sky-state'
 
 let lenis = null
 
+// Um único ouvinte de rolagem pro site todo. Não lê nada do DOM a cada evento:
+// a altura máxima fica em cache e só é medida de novo quando o ScrollTrigger recalcula.
+const subs = new Set()
+let maxScroll = 1
+let lastY = 0
+export function onScrollY(cb) {
+  subs.add(cb)
+  cb(lastY)
+  return () => subs.delete(cb)
+}
+const emit = (y) => {
+  lastY = y
+  sky.scroll = Math.min(1, y / maxScroll)
+  subs.forEach((cb) => cb(y))
+}
+
 export function initScroll() {
   if (lenis) return lenis
+  // a barra de endereço do celular aparece/some e muda a altura: não recalcula tudo por isso
+  ScrollTrigger.config({ ignoreMobileResize: true })
   if (!reduceMotion()) {
-    lenis = new Lenis({ lerp: 0.11, smoothWheel: true, wheelMultiplier: 0.9 })
+    lenis = new Lenis({
+      lerp: 0.1,
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      // rolagem suave também no dedo (celular), mantendo a inércia natural
+      syncTouch: true,
+      syncTouchLerp: 0.085,
+      touchInertiaMultiplier: 28,
+      // carrosséis horizontais (fotos, passagens) continuam rolando por conta própria
+      allowNestedScroll: true,
+    })
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((t) => lenis.raf(t * 1000))
     gsap.ticker.lagSmoothing(0)
   }
-  const onScroll = () => {
-    const max = document.documentElement.scrollHeight - innerHeight
-    sky.scroll = max > 0 ? Math.min(1, scrollY / max) : 0
+  const measure = () => {
+    maxScroll = Math.max(1, document.documentElement.scrollHeight - innerHeight)
   }
-  addEventListener('scroll', onScroll, { passive: true })
-  onScroll()
+  measure()
+  ScrollTrigger.addEventListener('refresh', measure)
+  if (lenis) lenis.on('scroll', (l) => emit(l.scroll))
+  else addEventListener('scroll', () => emit(scrollY), { passive: true })
+  emit(scrollY)
 
   // fontes mudam a altura dos títulos
   document.fonts?.ready.then(() => ScrollTrigger.refresh())

@@ -12,22 +12,35 @@ export default function Marquee() {
     () => {
       if (reduceMotion()) return
       const tween = gsap.to('.mq__track', { xPercent: -50, ease: 'none', duration: 40, repeat: -1 })
-      // a velocidade da rolagem empurra a faixa (e inverte quando sobe)
-      const boost = { t: 1 }
+      // a velocidade da rolagem empurra a faixa (e inverte quando sobe).
+      // Um único ticker suaviza o valor; só roda enquanto a faixa está na tela.
+      let target = 0
+      let cur = 0
+      let dir = 1
+      const tick = () => {
+        cur += (target - cur) * 0.1
+        target *= 0.9
+        tween.timeScale(dir * (1 + cur))
+      }
       ScrollTrigger.create({
         trigger: scope.current,
         start: 'top bottom',
         end: 'bottom top',
+        onToggle: (s) => {
+          if (s.isActive) {
+            tween.play()
+            gsap.ticker.add(tick)
+          } else {
+            tween.pause()
+            gsap.ticker.remove(tick)
+          }
+        },
         onUpdate: (s) => {
-          const dir = s.direction < 0 ? -1 : 1
-          const vel = Math.min(Math.abs(s.getVelocity()) / 250, 7)
-          gsap.killTweensOf(boost)
-          gsap
-            .timeline({ onUpdate: () => tween.timeScale(boost.t * dir) })
-            .to(boost, { t: 1 + vel, duration: 0.15 })
-            .to(boost, { t: 1, duration: 1.4, ease: 'power2.out' })
+          dir = s.direction < 0 ? -1 : 1
+          target = Math.min(Math.abs(s.getVelocity()) / 250, 6)
         },
       })
+      return () => gsap.ticker.remove(tick)
     },
     { scope, dependencies: [v.id], revertOnUpdate: true },
   )

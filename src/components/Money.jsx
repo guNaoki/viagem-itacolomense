@@ -28,27 +28,47 @@ function Tally({ n }) {
   )
 }
 
-function Bar({ budget, total, compact, name }) {
-  const items = budget.items
+// Itens do orçamento resolvidos pra N pessoas (ingresso por pessoa acompanha o N).
+const resolve = (budget, n) =>
+  budget.items.map((it) =>
+    it.perPerson
+      ? { ...it, label: `${it.label} (${n} × ${brl(it.perPerson)})`, min: n * it.perPerson, max: n * it.perPerson }
+      : it,
+  )
+
+function Bar({ budget, total, n, compact, name }) {
+  const items = resolve(budget, n)
   const sumMax = items.reduce((s, it) => s + it.max, 0)
   const sumMin = items.reduce((s, it) => s + it.min, 0)
   const restMin = total - sumMax
   const restMax = total - sumMin
-  const pct = (x) => `${(x / total) * 100}%`
+  const scale = Math.max(total, sumMax) // se faltar dinheiro, a barra passa do caixa
+  const pct = (x) => `${(Math.max(0, x) / scale) * 100}%`
   const segs = []
   items.forEach((it) => {
     segs.push({ key: it.key, w: it.min, cls: `seg--${it.key}` })
-    if (it.max > it.min) segs.push({ key: it.key + '-r', w: it.max - it.min, cls: 'seg--range' })
+    segs.push({ key: it.key + '-r', w: it.max - it.min, cls: 'seg--range' })
   })
   segs.push({ key: 'rest', w: restMin, cls: 'seg--rest' })
+
+  let rest
+  if (restMin >= 0) rest = <>sobra pra {budget.restLabel} <b>{range(restMin, restMax)}</b></>
+  else if (restMax < 0) rest = <>falta pra fechar a conta <b className="is-short">{range(-restMax, -restMin)}</b></>
+  else
+    rest = (
+      <>
+        sobra até <b>{brl(restMax)}</b> — ou falta <b className="is-short">{brl(-restMin)}</b> se a hospedagem vier no valor mais alto
+      </>
+    )
 
   return (
     <div className={`bar ${compact ? 'bar--compact' : ''}`}>
       {name && <p className="bar__name">{name}</p>}
       <div className="bar__track">
-        {segs.map((s) => (
-          <span key={s.key} className={`seg ${s.cls}`} style={{ width: pct(s.w) }} />
+        {segs.map((sg) => (
+          <span key={sg.key} className={`seg ${sg.cls}`} style={{ width: pct(sg.w) }} />
         ))}
+        {sumMax > total && <span className="bar__limit" style={{ left: pct(total) }} title="até aqui é o caixa" />}
       </div>
       <ul className="bar__legend">
         {items.map((it) => (
@@ -56,8 +76,8 @@ function Bar({ budget, total, compact, name }) {
             <i className={`dot seg--${it.key}`} /> {it.label} <b>{range(it.min, it.max)}</b>
           </li>
         ))}
-        <li className="bar__rest">
-          <i className="dot seg--rest" /> sobra pra {budget.restLabel} <b>{range(restMin, restMax)}</b>
+        <li className={`bar__rest ${restMin < 0 ? 'is-short' : ''}`}>
+          <i className="dot seg--rest" /> <span>{rest}</span>
         </li>
       </ul>
     </div>
@@ -103,7 +123,7 @@ export default function Money() {
     { scope, dependencies: [vibe], revertOnUpdate: true },
   )
 
-  const base = caixa(TRIP.people.base)
+  const total = caixa(n)
   const others = VIBE_ORDER.filter((id) => id !== vibe)
 
   return (
@@ -151,9 +171,9 @@ export default function Money() {
         </div>
 
         <div className="money__split">
-          <p className="hand money__base">pra onde vai — na conta base de {TRIP.people.base} pessoas ({brl(base)})</p>
+          <p className="hand money__base">pra onde vai — com {n} pessoas ({brl(total)} no caixa)</p>
           <p className="money__label">{v.budget.label}</p>
-          <Bar budget={v.budget} total={base} />
+          <Bar budget={v.budget} total={total} n={n} />
 
           <details className="money__others">
             <summary>
@@ -161,11 +181,11 @@ export default function Money() {
             </summary>
             <div className="money__others-in">
               {others.map((id) => (
-                <Bar key={id} budget={VIBES[id].budget} total={base} compact name={VIBES[id].budget.label} />
+                <Bar key={id} budget={VIBES[id].budget} total={total} n={n} compact name={VIBES[id].budget.label} />
               ))}
             </div>
           </details>
-          <p className="money__neutral">Todas as opções cabem no mesmo valor por pessoa — a diferença é só quanto sobra pra mesa.</p>
+          <p className="money__neutral">Hospedagem, transporte e diversão têm preço fechado; o que muda com o número de gente é quanto sobra pra mesa. Troca ali em cima entre 9, 12 e 15 pra ver.</p>
         </div>
       </div>
     </section>

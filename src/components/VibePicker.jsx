@@ -15,7 +15,7 @@ const originOf = (e) => {
   return { x: kb ? r.left + r.width / 2 : e.clientX, y: kb ? r.top + r.height / 2 : e.clientY }
 }
 
-function Detail({ v, onNext, next }) {
+function Detail({ v }) {
   const ref = useRef(null)
   useGSAP(
     () => {
@@ -86,13 +86,6 @@ function Detail({ v, onNext, next }) {
           </div>
         </aside>
       )}
-
-      <button type="button" className="vd__next" data-v={next.id} onClick={onNext}>
-        <span className="hand">e se fosse a próxima?</span>
-        <span className="vd__next-name display">
-          {next.short} <Icon name="arrow" size={28} />
-        </span>
-      </button>
     </div>
   )
 }
@@ -102,7 +95,6 @@ export default function VibePicker() {
   const scope = useRef(null)
   useReveal(scope)
   const v = VIBES[vibe]
-  const next = VIBES[VIBE_ORDER[(VIBE_ORDER.indexOf(vibe) + 1) % VIBE_ORDER.length]]
 
   return (
     <section className="sec picker" id="vibe" ref={scope}>
@@ -127,7 +119,7 @@ export default function VibePicker() {
                 aria-checked={on}
                 className={`vcard ${on ? 'is-on' : ''}`}
                 data-v={id}
-                onClick={(e) => chooseVibe(id, { ...originOf(e), scrollTo: '#vibe-cards' })}
+                onClick={(e) => chooseVibe(id, { ...originOf(e), scrollTo: '#vibe' })}
               >
                 <span className="vcard__img">
                   <img src={c.photos[0].src} alt="" loading="lazy" />
@@ -146,7 +138,7 @@ export default function VibePicker() {
         </div>
         <p className="cards__hint hand" aria-hidden="true">toca nas outras pra comparar ↑</p>
 
-        <Detail key={vibe} v={v} next={next} onNext={(e) => chooseVibe(next.id, { ...originOf(e), scrollTo: '#vibe-cards' })} />
+        <Detail key={vibe} v={v} />
       </div>
     </section>
   )
