@@ -29,10 +29,9 @@ export function initScroll() {
       lerp: 0.1,
       smoothWheel: true,
       wheelMultiplier: 0.9,
-      // rolagem suave também no dedo (celular), mantendo a inércia natural
-      syncTouch: true,
-      syncTouchLerp: 0.085,
-      touchInertiaMultiplier: 28,
+      // no dedo a rolagem é a nativa do celular (a mais estável e responsiva);
+      // a suavização fica pro mouse/trackpad
+      syncTouch: false,
       // carrosséis horizontais (fotos, passagens) continuam rolando por conta própria
       allowNestedScroll: true,
     })

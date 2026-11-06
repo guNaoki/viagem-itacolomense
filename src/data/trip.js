@@ -5,6 +5,9 @@
    Também dá pra usar URL externa (ex.: CDN do Airbnb).
 ------------------------------------------------------------------- */
 
+import { FOLDER_PHOTOS } from './photos'
+import { withSrcSet } from '../lib/img'
+
 export const TRIP = {
   // Contagem regressiva: até quando? (fuso de Brasília)
   countdownTarget: '2027-01-01T00:00:00-03:00',
@@ -21,8 +24,9 @@ export const caixa = (n) =>
 
 /* ------------------------------------------------------------------
    FOTOS DA JORNADA (valem pra todas as vibes)
-   Enquanto a lista estiver vazia, aparece um espaço reservado.
-   Ex.: { src: '/img/itacolomi/1.webp', note: 'a primeira vez lá' }
+   Jeito mais fácil: jogar os arquivos em src/assets/jornada/<parada>/ (ver src/data/photos.js).
+   Também dá pra listar aqui à mão: { src: '/img/itacolomi/1.webp', note: 'a primeira vez lá' }
+   Enquanto não houver foto nenhuma, aparece um espaço reservado.
 ------------------------------------------------------------------- */
 export const SHARED_PHOTOS = {
   // fotos da primeira ida a Novo Itacolomi
@@ -263,7 +267,13 @@ export const ITINERARIES = {
   },
 }
 
-export const scenePhotos = (v, scene) => SHARED_PHOTOS[scene] || v.scenes?.[scene] || []
+// fotos de uma parada: pasta da vibe > pasta geral > lista compartilhada > fotos da vibe
+export const scenePhotos = (v, scene) => [
+  ...(FOLDER_PHOTOS[`${scene}-${v.id}`] || []),
+  ...(FOLDER_PHOTOS[scene] || []),
+  ...(SHARED_PHOTOS[scene] || []),
+  ...(v.scenes?.[scene] || []),
+].map(withSrcSet)
 
 /* ------------------------------ ROTAS ------------------------------ */
 export const ROUTES = {

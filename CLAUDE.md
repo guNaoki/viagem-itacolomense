@@ -1,0 +1,81 @@
+# CLAUDE.md — Janeiro 2027 (viagem-itacolomense)
+
+Site de uma página pra um grupo de 9–15 amigos escolher a viagem de janeiro. Público: celular, via WhatsApp.
+Produção: https://viagem-itacolomense.vercel.app (Vercel publica sozinha a cada push na `main`).
+Instruções de uso pra humanos estão no README.md; este arquivo é o contexto técnico pra continuar o trabalho.
+
+## Comandos
+- `npm run dev` — Vite na porta 5178 com `--host` (dá pra abrir no celular pela rede local)
+- `npm run build` — sempre rodar antes de commitar; precisa terminar em "✓ built"
+- `npm run thumbs` — gera `public/img/*-640.webp` (versões leves) das fotos novas
+- Não há testes automatizados nem lint configurado.
+
+## Idioma e tom
+- Todo texto do site em **pt-BR informal**, voz de amigo ("bora", "a galera"). Comentários de código também em pt-BR.
+- O site é **pra todo mundo**: não citar nomes dos organizadores. Regra do caixa fica genérica
+  ("quem organiza entra com R$ 600").
+- Visual sem "cara de IA": nada de emoji como ícone, cards de vidro em grade, gradientes genéricos.
+  A linguagem é pôster/zine de verão: Fraunces (títulos), Bricolage Grotesque (texto), Caveat (anotações à mão),
+  polaroids com fita crepe, rabiscos que se desenham, passagens picotadas.
+
+## Arquitetura
+- **Conteúdo:** tudo em `src/data/trip.js` (VIBES, ITINERARIES, ROUTES, TRANSPORT, TRIP). Componentes não devem
+  ter texto de conteúdo fixo que dependa da vibe — vai pro `trip.js`.
+- **Fotos da jornada:** `src/data/photos.js` usa `import.meta.glob` + `vite-imagetools` em `src/assets/jornada/<cena>/`
+  (e `<cena>-<vibe>/`). `scenePhotos(v, scene)` em `trip.js` junta pasta da vibe > pasta geral > `SHARED_PHOTOS` > `v.scenes`.
+- **Estado global** (`src/lib/trip-context.jsx`): `vibe` e `mode` ('day' | 'night'). `chooseVibe(id, {x, y, scrollTo})`
+  dispara a transição de cor (`VibeFlood`), troca a vibe por baixo e rola até `scrollTo` (padrão: `#vibe`).
+  Vibe `ody` tem `dayOnly: true` → `setMode` sempre força dia.
+- **Dia/noite é automático**: quem muda é a jornada (`time` de cada parada). Não existe mais botão Dia/Sarau.
+- **Céu** (`src/gl/Sky.jsx`): WebGL puro, um triângulo em tela cheia. Lê o objeto mutável `sky` de
+  `src/gl/sky-state.js` a cada quadro (fora do React). Cores/forma do horizonte por vibe vêm de `VIBES[x].sky`
+  e são interpoladas com GSAP. O grão de papel é feito no shader.
+- **Seções** (ordem em `App.jsx`): Hero → Marquee → VibePicker → Journey → RouteSection → Money → Outro; Dock (navbar) e
+  TopBar fixos. Seções que dependem da vibe usam `key={vibe}` no miolo pra remontar e reanimar.
+- **Jornada** (`Journey.jsx`): trilho alto (`.stage-track`, altura = tela × (1 + soma dos pesos)) com o palco em
+  `position: sticky`. Um ScrollTrigger sem pin lê o progresso e calcula parada (`pos.i`) e foto (`pos.ph`).
+  O carrinho anda continuamente (`quickTo`), e `--t` (0–1 dentro da parada) dá parallax à pilha de fotos.
+  Troca de parada é em camadas com fade CSS (`is-in`/`is-out`). Pesos: `STEP_BASE` + `STEP_PER_PHOTO` por foto.
+- **Rota** (`RouteSection.jsx`): mesmo esquema — `.route__pin` sticky dentro de `.route__track` + `.route__runway`,
+  timeline com `scrub` dirige estrada (DrawSVG) e carro (MotionPath).
+- **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam; se faltar dinheiro, mostra
+  o limite tracejado e o texto em laranja.
+
+## Regras de desempenho (o site já travou no celular por cada um destes)
+- **Não usar `pin` do ScrollTrigger.** Usar `position: sticky` + ScrollTrigger só pra ler progresso.
+  (Pin no celular treme com a barra de endereço e o pin-spacer briga com o React.)
+- Rolagem: Lenis só suaviza **mouse/trackpad** (`syncTouch: false`); no toque a rolagem é a nativa.
+  `ScrollTrigger.config({ ignoreMobileResize: true })` e `useStableVh()` ignoram a barra de endereço.
+- **Nada de ler layout em handler de rolagem** (`scrollHeight`, `getBoundingClientRect`, `getBBox`…).
+  Use `onScrollY(cb)` de `src/lib/scroll.js` (um único ouvinte, valores em cache).
+- **Não animar DrawSVG/`gsap.set({drawSVG})` por quadro**: ele mede o caminho (`getBBox`) a cada chamada.
+  Pra progresso contínuo use `pathLength="1"` + `strokeDasharray` direto no estilo.
+- Sem `backdrop-filter` no celular (só em `@media (hover:hover) and (pointer:fine)`); sem camadas fixas
+  com `mix-blend-mode` sobre o canvas.
+- Céu: no celular renderiza em ~0,42×DPR e a 30 fps; estrelas/fogueira só calculam com `uNight` alto.
+  Não recriar o canvas quando só a altura muda.
+- Transições de cor na raiz (`@property --paper/--ink/--ink-2`) são curtas (0,7 s) e só nessas 3 variáveis:
+  cada quadro recalcula o estilo da página inteira.
+- Animação de entrada/saída frequente → CSS `@keyframes` (compositor), não tween por evento.
+
+## Armadilhas conhecidas
+- **SplitText + `mask`**: a classe da máscara vira `<classe>-mask`, mas o regex do GSAP quebra nome com hífen
+  (`split-char` → `split-mask-char-mask`). Use nomes **sem hífen**: `sline`, `schar` (CSS em `base.css`
+  dá folga pra não cortar itálico/acento/perna do "g"). O título do Hero desfaz o split ao fim da entrada.
+- **Rabiscos** (`Doodle.jsx`): o caminho é recalculado no tamanho real do SVG (ResizeObserver). Não voltar a usar
+  `preserveAspectRatio="none"` + `vector-effect` com dash — o traço quebra em pedaços.
+- "Janeiro" do Hero usa `useFitText` (ajusta o font-size à largura) — não trocar por `vw` fixo.
+- `vite-imagetools` está com `cache: { enabled: false }` porque no Windows o cache dava "Input file is missing".
+- No Windows o `npm run dev` segura arquivos em `src/assets`: pare o servidor pra apagar fotos.
+- Prévia do link: `og:image` precisa de URL **absoluta** (`https://viagem-itacolomense.vercel.app/og.jpg`).
+  Se o domínio mudar, atualizar `index.html`.
+
+## Como testar visualmente
+Não há Playwright no projeto. O que funcionou: `puppeteer-core` (fora do repo) apontando pro Chrome instalado,
+com `--enable-unsafe-swiftshader` pro WebGL, viewport 390×844 `isMobile/hasTouch` e 1440/1850 no desktop,
+rolando com `scrollTo` em passos e tirando screenshots. Medição de quadros em Chrome sem GPU oscila muito:
+confirmar fluidez num celular de verdade (`npm run dev` + IP da rede).
+
+## Git
+- Branch `main`; autor `GUSTAVO NAOKI IDA <gunaoki.ida@gmail.com>`.
+- Commits em pt-BR, descrevendo o que mudou pra quem usa o site.

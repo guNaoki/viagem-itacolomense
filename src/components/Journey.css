@@ -15,9 +15,11 @@
 .jr__tab-note { font-size: 21px; opacity: 0.85; }
 .jr__single { font-size: 28px; color: var(--accent-ink); margin: 26px 0 0; transform: rotate(-2deg); width: max-content; max-width: 100%; }
 
-/* ---------- palco travado ---------- */
+/* ---------- palco grudado (sticky: o navegador segura, sem tremer) ---------- */
+.stage-track { position: relative; }
 .stage {
-  position: relative;
+  position: sticky;
+  top: 0;
   height: 100svh;
   display: grid;
   grid-template-rows: auto 1fr;
@@ -71,7 +73,16 @@
 /* corpo: fotos + texto */
 .stage__body { display: grid; grid-template-rows: 1fr auto; gap: 14px; min-height: 0; max-width: var(--maxw); width: 100%; margin: 0 auto; }
 .stage__stacks { position: relative; min-height: 0; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); }
-.stage__stack { grid-area: 1 / 1; position: relative; min-height: 0; display: grid; place-items: center; }
+.stage__stack { grid-area: 1 / 1; position: relative; min-height: 0; display: grid; }
+/* resposta contínua: a pilha de fotos acompanha o dedo enquanto você rola */
+.stage__float {
+  position: relative;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  transform: translate3d(0, calc((0.5 - var(--t, 0.5)) * 34px), 0) rotate(calc((var(--t, 0.5) - 0.5) * 2.4deg));
+  will-change: transform;
+}
 .st__copies { display: grid; }
 .st__copy { grid-area: 1 / 1; align-self: end; }
 

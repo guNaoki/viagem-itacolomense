@@ -63,11 +63,13 @@ function RouteMap({ routeId, vehicle, destName }) {
       const road = ref.current.querySelector('.map__road-top')
       const car = ref.current.querySelector('.map__car')
       const pinEl = ref.current.closest('.route__pin')
+      const trackEl = ref.current.closest('.route__track')
       if (reduceMotion()) return
       // a tela trava no mapa enquanto o carro faz a viagem inteira
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
-        scrollTrigger: { trigger: pinEl, pin: true, start: 'top 64px', end: '+=130%', scrub: 0.7, anticipatePin: 1, invalidateOnRefresh: true },
+        // o mapa fica grudado (sticky) enquanto o trilho passa; a rolagem dirige o carro
+        scrollTrigger: { trigger: trackEl, start: 'top 64px', end: 'bottom bottom', scrub: 0.4 },
       })
       tl.fromTo(ref.current.querySelectorAll('.map__road-base, .map__road-top'), { drawSVG: '0%' }, { drawSVG: '100%', duration: 1 }, 0.05)
         .to(car, { motionPath: { path: road, align: road, alignOrigin: [0.5, 0.5] }, duration: 1, immediateRender: true }, 0.05)
@@ -79,8 +81,7 @@ function RouteMap({ routeId, vehicle, destName }) {
         ease: 'back.out(2)',
         scrollTrigger: { trigger: pinEl, start: 'top 80%', once: true },
       })
-      ScrollTrigger.sort()
-      ScrollTrigger.refresh()
+      requestAnimationFrame(() => ScrollTrigger.refresh())
     },
     { scope: ref, dependencies: [d], revertOnUpdate: true },
   )
@@ -180,6 +181,7 @@ export default function RouteSection() {
           Como a gente <em>chega lá?</em>
         </h2>
 
+        <div className="route__track">
         <div className="route__pin">
         <div className="route__total">
           <span className="display">{route.total}</span>
@@ -189,6 +191,9 @@ export default function RouteSection() {
         {route.back && <p className="route__back hand">{route.back}</p>}
 
         <RouteMap routeId={v.route} vehicle={solo ? 'van' : 'car'} destName={destName} />
+        </div>
+        {/* comprimento da "viagem" na rolagem */}
+        <div className="route__runway" aria-hidden="true" />
         </div>
 
         <h3 className="route__h display" data-split>

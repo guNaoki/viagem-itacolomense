@@ -3,6 +3,7 @@ import { useTrip } from '../lib/trip-context'
 import { useReveal } from '../lib/useReveal'
 import { TRIP, VIBES, VIBE_ORDER } from '../data/trip'
 import Icon from './Icons'
+import { small } from '../lib/img'
 import Doodle from './Doodle'
 import './Outro.css'
 
@@ -61,7 +62,7 @@ export default function Outro() {
                     chooseVibe(id, { x: r.left + r.width / 2, y: r.top + r.height / 2, scrollTo: '#vibe' })
                   }}
                 >
-                  <img src={o.photos[0].src} alt="" loading="lazy" />
+                  <img src={small(o.photos[0].src)} alt="" loading="lazy" decoding="async" />
                   <span className="other__txt">
                     <span className="hand">opção {o.n.replace('0', '')}</span>
                     <span className="other__name display">{o.short}</span>

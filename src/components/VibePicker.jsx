@@ -6,6 +6,7 @@ import { useReveal } from '../lib/useReveal'
 import Polaroids from './Polaroids'
 import Doodle from './Doodle'
 import Icon from './Icons'
+import { small, srcSetOf } from '../lib/img'
 import './VibePicker.css'
 
 // origem da "inundação" de cor: o ponto do toque (ou o centro do botão, no teclado)
@@ -74,7 +75,7 @@ function Detail({ v }) {
           <span className="tape" style={{ top: -12, left: 28, transform: 'rotate(-4deg)' }} />
           <div className="planb__pics" aria-hidden="true">
             {v.plan_b.photos.map((src, i) => (
-              <img key={src} src={src} alt="" loading="lazy" style={{ '--r': `${[-6, 4, -2][i]}deg` }} />
+              <img key={src} src={small(src)} alt="" loading="lazy" decoding="async" style={{ '--r': `${[-6, 4, -2][i]}deg` }} />
             ))}
           </div>
           <div>
@@ -122,7 +123,7 @@ export default function VibePicker() {
                 onClick={(e) => chooseVibe(id, { ...originOf(e), scrollTo: '#vibe' })}
               >
                 <span className="vcard__img">
-                  <img src={c.photos[0].src} alt="" loading="lazy" />
+                  <img src={c.photos[0].src} srcSet={srcSetOf(c.photos[0].src)} sizes="(min-width: 900px) 400px, 32vw" alt="" loading="lazy" decoding="async" />
                 </span>
                 <span className="vcard__shade" aria-hidden="true" />
                 <span className="vcard__radio" aria-hidden="true" />

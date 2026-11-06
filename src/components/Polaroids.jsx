@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { srcSetOf } from '../lib/img'
 
 // Tira de polaroids com swipe nativo (scroll-snap) + arrastar com o mouse no desktop.
 const TILT = [-2.6, 1.8, -1.2, 2.4, -2.1, 1.3, -1.6, 2.2]
@@ -38,7 +39,7 @@ export default function Polaroids({ photos, className = '' }) {
         <figure className="polaroid strip__item" role="listitem" key={p.src} style={{ '--tilt': `${TILT[i % TILT.length]}deg` }}>
           {i % 3 === 0 && <span className="tape" style={{ top: -12, left: '50%', transform: 'translateX(-50%) rotate(-3deg)' }} />}
           <div className="strip__img">
-            <img src={p.src} alt={p.note} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
+            <img src={p.src} srcSet={srcSetOf(p.src)} sizes="(min-width: 900px) 320px, 72vw" alt={p.note} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
           </div>
           <figcaption>{p.note}</figcaption>
         </figure>

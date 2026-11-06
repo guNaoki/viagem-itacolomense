@@ -69,6 +69,7 @@ body {
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
 }
 img, svg, canvas { display: block; max-width: 100%; }

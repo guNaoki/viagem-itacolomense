@@ -1,4 +1,6 @@
-.route__pin { padding-top: 6px; }
+.route__track { position: relative; }
+.route__pin { position: sticky; top: 64px; padding-top: 6px; }
+.route__runway { height: 90svh; }
 .route__total { position: relative; display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-top: 24px; padding-bottom: 12px; }
 .route__total .display { font-size: clamp(40px, 8vw, 84px); font-style: italic; font-weight: 700; color: var(--accent-ink); }
 .route__total .hand { font-size: 26px; }
