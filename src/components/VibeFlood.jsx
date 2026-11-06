@@ -20,7 +20,7 @@ export default function VibeFlood() {
       const el = ref.current
       const { x, y } = flood
       const R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 20
-      const split = SplitText.create(el.querySelector('.flood__name'), { type: 'words,chars', charsClass: 'split-char', mask: 'chars' })
+      const split = SplitText.create(el.querySelector('.flood__name'), { type: 'words,chars', charsClass: 'schar', mask: 'chars' })
 
       gsap
         .timeline({ onComplete: () => { split.revert(); setFlood(null) } })

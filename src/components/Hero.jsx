@@ -13,7 +13,7 @@ export default function Hero() {
   const { v } = useTrip()
   const scope = useRef(null)
   const jan = useRef(null)
-  useFitText(jan, { max: 330 })
+  useFitText(jan, { max: 330, ratio: 0.97 })
 
   // entrada cinematográfica (espera as fontes pra cortar as letras no lugar certo)
   useGSAP(
@@ -25,9 +25,10 @@ export default function Hero() {
         if (started) return
         started = true
         gsap.set('.hero__title, .hero__below', { autoAlpha: 1 })
-        const split = SplitText.create(jan.current, { type: 'words,chars', charsClass: 'split-char', mask: 'chars' })
+        const split = SplitText.create(jan.current, { type: 'words,chars', charsClass: 'schar', mask: 'chars' })
         gsap
-          .timeline({ delay: 0.1 })
+          // no fim da entrada desfaz o split: o texto volta a ser texto normal, sem máscara nenhuma
+          .timeline({ delay: 0.1, onComplete: () => split.revert() })
           .from(split.chars, { yPercent: 115, rotate: 10, duration: 1.3, stagger: 0.05, ease: 'expo.out' })
           .from('.hero__kicker', { y: 20, autoAlpha: 0, rotate: -8, duration: 0.8 }, '-=1.1')
           .from('.hero__year', { xPercent: 20, autoAlpha: 0, duration: 1.1, ease: 'expo.out' }, '-=.9')

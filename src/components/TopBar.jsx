@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useTrip } from '../lib/trip-context'
 import { scrollToEl } from '../lib/scroll'
-import Icon from './Icons'
 import './TopBar.css'
 
+// Topo enxuto: só a marca. O dia/noite é automático (acompanha a jornada).
 export default function TopBar() {
-  const { mode, setMode, v } = useTrip()
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
     const on = () => setScrolled(scrollY > innerHeight * 0.5)
@@ -25,17 +23,6 @@ export default function TopBar() {
       >
         jan<i>/</i>27
       </a>
-      <div className={`toggle ${v.dayOnly ? 'is-hidden' : ''}`} role="group" aria-label="Clima do site" data-on={mode} aria-hidden={v.dayOnly || undefined}>
-        <span className="toggle__knob" aria-hidden="true" />
-        <button type="button" aria-pressed={mode === 'day'} onClick={() => setMode('day')}>
-          <Icon name="sun" size={18} />
-          <span><b className="toggle__pre">Vibe </b>Dia</span>
-        </button>
-        <button type="button" aria-pressed={mode === 'night'} onClick={() => setMode('night')}>
-          <Icon name="fire" size={18} />
-          <span><b className="toggle__pre">Vibe </b>Sarau</span>
-        </button>
-      </div>
     </header>
   )
 }

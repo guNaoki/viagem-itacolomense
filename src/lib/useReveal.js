@@ -19,7 +19,7 @@ export function useReveal(scope, deps = []) {
           type: 'lines,words',
           mask: 'lines',
           autoSplit: true,
-          linesClass: 'split-line',
+          linesClass: 'sline',
           onSplit: (self) =>
             gsap.from(self.lines, {
               yPercent: 115,
