@@ -105,7 +105,8 @@ a { color: inherit; }
 .h2 { font-size: clamp(46px, 11.5vw, 128px); }
 
 /* ============ layout ============ */
-main { position: relative; z-index: 1; }
+/* clip (e não hidden): corta sobra horizontal sem quebrar o position: sticky */
+main { position: relative; z-index: 1; overflow-x: clip; }
 .sec { position: relative; padding: clamp(84px, 14vh, 170px) var(--gut); }
 .wrap { max-width: var(--maxw); margin: 0 auto; position: relative; }
 

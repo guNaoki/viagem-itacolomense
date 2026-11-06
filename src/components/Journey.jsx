@@ -2,78 +2,56 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTrip } from '../lib/trip-context'
 import { ITINERARIES, PLACEHOLDERS, scenePhotos } from '../data/trip'
 import { useReveal } from '../lib/useReveal'
-import { useStableVh } from '../lib/useStableVh'
+import { scrollToEl } from '../lib/scroll'
 import { gsap, ScrollTrigger, useGSAP, reduceMotion } from '../lib/gsap'
 import { sky } from '../gl/sky-state'
+import Polaroids from './Polaroids'
 import Icon from './Icons'
 import './Journey.css'
 
 /*
-  O fim de semana contado parada por parada.
-  O palco fica "grudado" na tela (position: sticky — quem segura é o navegador,
-  não o JavaScript, então não treme) e a rolagem vira o "play":
-   - o carrinho anda o tempo todo enquanto você rola (resposta imediata)
-   - as fotos de cada parada vão passando como polaroids
-   - o céu vira noite nas paradas de sarau e volta a ser dia de manhã
+  O fim de semana contado parada por parada, com rolagem normal (nada trava a tela).
+  Só o trajeto em miniatura fica grudado no topo (position: sticky) enquanto as paradas passam:
+   - o carrinho anda junto com a rolagem e o nó da parada da vez acende
+   - tocar num nó leva até a parada
+   - o céu vira noite na parada do sarau e volta a ser dia de manhã
 */
 
-const TILT = [-3, 2.4, -1.6, 3, -2.4, 1.6]
-// quanto de rolagem (em alturas de tela) cada parada usa: curto, e um pouco mais por foto
-const STEP_BASE = 0.42
-const STEP_PER_PHOTO = 0.2
-
-function Stack({ photos, idx, scene }) {
+function Pics({ photos, scene }) {
   if (!photos.length) {
     return (
-      <div className="ph ph--empty">
-        <svg viewBox="0 0 24 24" className="ph__cam" aria-hidden="true">
+      <div className="chap__empty">
+        <svg viewBox="0 0 24 24" className="chap__cam" aria-hidden="true">
           <path d="M4 8.5h3l1.6-2.2h6.8L17 8.5h3v10H4z" />
           <circle cx="12" cy="13.3" r="3.3" />
         </svg>
         <p className="hand">{PLACEHOLDERS[scene] || 'foto aqui'}</p>
-        <span className="ph__soon">em breve</span>
+        <span>em breve</span>
       </div>
     )
   }
-  return photos.map((p, i) => {
-    const d = i - idx
-    const style =
-      d < 0
-        ? { transform: `translate(-120%, -6%) rotate(-22deg)`, opacity: 0, zIndex: 50 }
-        : { transform: `translate(${d * 12}px, ${d * 10}px) rotate(${TILT[i % TILT.length] + d * 2}deg) scale(${1 - d * 0.05})`, opacity: d > 3 ? 0 : 1, zIndex: 40 - d }
+  if (photos.length === 1) {
+    const p = photos[0]
     return (
-      <figure className="polaroid ph" key={p.src + i} style={style} aria-hidden={d !== 0}>
-        {i === 0 && <span className="tape" style={{ top: -12, left: '50%', transform: 'translateX(-50%) rotate(-3deg)' }} />}
-        <div className="ph__img">
-          <img
-            src={p.src}
-            srcSet={p.srcSet}
-            sizes="(min-width: 900px) 460px, 80vw"
-            alt={p.note}
-            loading={Math.abs(d) < 2 ? 'eager' : 'lazy'}
-            decoding="async"
-            draggable="false"
-          />
+      <figure className="polaroid chap__one" data-pop>
+        <span className="tape" style={{ top: -12, left: '50%', transform: 'translateX(-50%) rotate(-3deg)' }} />
+        <div className="chap__img">
+          <img src={p.src} srcSet={p.srcSet} sizes="(min-width: 900px) 420px, 78vw" alt={p.note} loading="lazy" decoding="async" />
         </div>
         <figcaption>{p.note}</figcaption>
       </figure>
     )
-  })
+  }
+  return <Polaroids photos={photos} className="chap__strip" />
 }
 
-function Stage({ steps, v, setMode }) {
-  const track = useRef(null)
+function Trip({ steps, v, setMode }) {
   const root = useRef(null)
   const routeBox = useRef(null)
   const N = steps.length
-  const [pos, setPos] = useState({ i: 0, ph: 0 })
+  const [active, setActive] = useState(0)
   const [W, setW] = useState(0)
-  const vh = useStableVh()
-
   const photos = steps.map((s) => scenePhotos(v, s.scene))
-  const counts = photos.map((p) => Math.max(1, p.length))
-  const weights = counts.map((k) => STEP_BASE + STEP_PER_PHOTO * k)
-  const total = weights.reduce((a, b) => a + b, 0)
 
   // geometria do trajeto em miniatura (onda passando pelas paradas)
   useLayoutEffect(() => {
@@ -109,120 +87,96 @@ function Stage({ steps, v, setMode }) {
         fill.style.strokeDasharray = `${prog.p} 1` // pathLength=1: sem medir o caminho a cada quadro
       }
       apply()
-      const toP = gsap.quickTo(prog, 'p', { duration: reduceMotion() ? 0.01 : 0.35, ease: 'power2.out', onUpdate: apply })
-      const cur = { i: -1, ph: -1 }
+      const toP = gsap.quickTo(prog, 'p', { duration: reduceMotion() ? 0.01 : 0.45, ease: 'power2.out', onUpdate: apply })
 
+      // cada parada empurra o carro do meio do caminho anterior até o meio do próximo
+      el.querySelectorAll('.chap').forEach((chap, i) => {
+        ScrollTrigger.create({
+          trigger: chap,
+          start: 'top 60%',
+          end: 'bottom 60%',
+          onUpdate: (self) => {
+            const t = self.progress
+            const P = i === 0 ? 0.5 * t : i === N - 1 ? N - 1.5 + 0.5 * t : i - 0.5 + t
+            toP(Math.min(N - 1, Math.max(0, P)) / (N - 1))
+          },
+          onToggle: (self) => {
+            if (!self.isActive) return
+            setActive(i)
+            setMode(steps[i].time)
+          },
+        })
+      })
+
+      // antes da primeira parada é dia; a lua some enquanto o trajeto está na tela
       ScrollTrigger.create({
-        trigger: track.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        onUpdate: (self) => {
-          const f = self.progress * total
-          let acc = 0
-          let i = 0
-          while (i < N - 1 && f > acc + weights[i]) acc += weights[i++]
-          const t = Math.min(1, Math.max(0, (f - acc) / weights[i]))
-          // o carro anda sem parar: dentro da parada i ele vai de (i - ½) até (i + ½);
-          // na primeira sai do nó 1 já no primeiro toque, na última chega no nó final
-          const P = i === 0 ? 0.5 * t : i === N - 1 ? N - 1.5 + 0.5 * t : i - 0.5 + t
-          toP(Math.min(N - 1, Math.max(0, P)) / (N - 1))
-          el.style.setProperty('--t', t.toFixed(3))
-          const ph = Math.min(counts[i] - 1, Math.floor(t * counts[i]))
-          if (i !== cur.i || ph !== cur.ph) {
-            if (i !== cur.i && self.isActive) setMode(steps[i].time)
-            cur.i = i
-            cur.ph = ph
-            setPos({ i, ph })
-          }
-        },
-        onEnter: () => setMode(steps[Math.max(0, cur.i)].time),
+        trigger: el,
+        start: 'top 60%',
+        end: 'bottom 40%',
         onLeaveBack: () => setMode('day'),
-        // a lua sairia em cima do trajeto: some enquanto o palco está na tela
         onToggle: (self) => gsap.to(sky, { moon: self.isActive ? 0 : 1, duration: 0.6, overwrite: 'auto' }),
       })
-      // a altura do trilho entra no cálculo de tudo que vem depois
       requestAnimationFrame(() => ScrollTrigger.refresh())
     },
-    { scope: root, dependencies: [d, vh], revertOnUpdate: true },
+    { scope: root, dependencies: [d], revertOnUpdate: true },
   )
 
-  // troca de parada em camadas: a anterior sai com fade enquanto a nova entra
-  const [layers, setLayers] = useState([{ i: 0, id: 0 }])
-  const lastPh = useRef({})
-  lastPh.current[pos.i] = pos.ph
-  useEffect(() => {
-    setLayers((ls) => (ls[ls.length - 1].i === pos.i ? ls : [...ls.map((l) => ({ ...l, out: true })), { i: pos.i, id: Date.now() }]))
-    const tm = setTimeout(() => setLayers((ls) => ls.filter((l) => !l.out)), 650)
-    return () => clearTimeout(tm)
-  }, [pos.i])
-
   return (
-    <div className="stage-track" ref={track} style={{ height: Math.round(vh * (1 + total)) }}>
-      <div className="stage" ref={root}>
-        <div className="stage__route">
-          <div className="mr" ref={routeBox}>
-            <svg className="mr__svg" width={W} height={H} viewBox={`0 0 ${W || 1} ${H}`} aria-hidden="true">
-              <path d={d} className="mr__ghost" />
-              <path d={d} className="mr__fill" pathLength="1" />
-              {W > 0 &&
-                nodes.map(([x, y], i) => (
-                  <g key={i} className={`mr__node ${i < pos.i ? 'is-past' : ''} ${i === pos.i ? 'is-now' : ''}`}>
-                    <circle cx={x} cy={y} r="13" />
-                    <text x={x} y={y + 5} textAnchor="middle">{i + 1}</text>
-                  </g>
-                ))}
-            </svg>
-            <div className="mr__car" aria-hidden="true">
-              <Icon name={v.id === 'ody' ? 'van' : 'car'} size={18} stroke={2} />
-            </div>
-            <ol className="mr__labels" aria-label="Paradas">
-              {steps.map((st, i) => (
-                <li key={i} style={{ left: W ? nodes[i][0] : 0 }} className={i === pos.i ? 'is-now' : ''} aria-current={i === pos.i ? 'step' : undefined}>
-                  {st.short}
-                </li>
+    <div className="trip" ref={root}>
+      {/* só isto fica grudado no topo */}
+      <div className="trip__bar">
+        <div className="mr" ref={routeBox}>
+          <svg className="mr__svg" width={W} height={H} viewBox={`0 0 ${W || 1} ${H}`} aria-hidden="true">
+            <path d={d} className="mr__ghost" />
+            <path d={d} className="mr__fill" pathLength="1" />
+            {W > 0 &&
+              nodes.map(([x, y], i) => (
+                <g key={i} className={`mr__node ${i < active ? 'is-past' : ''} ${i === active ? 'is-now' : ''}`}>
+                  <circle cx={x} cy={y} r="13" />
+                  <text x={x} y={y + 5} textAnchor="middle">{i + 1}</text>
+                </g>
               ))}
-            </ol>
+          </svg>
+          <div className="mr__car" aria-hidden="true">
+            <Icon name={v.id === 'ody' ? 'van' : 'car'} size={18} stroke={2} />
           </div>
-        </div>
-
-        <div className="stage__body">
-          <div className="stage__stacks">
-            {layers.map((l) => (
-              <div className={`stage__stack ${l.out ? 'is-out' : 'is-in'}`} key={l.id} aria-hidden={l.out || undefined}>
-                <div className="stage__float">
-                  <Stack photos={photos[l.i]} idx={l.out ? lastPh.current[l.i] ?? 0 : pos.ph} scene={steps[l.i].scene} />
-                </div>
-              </div>
+          <ol className="mr__labels" aria-label="Ir pra parada">
+            {steps.map((st, i) => (
+              <li key={i} style={{ left: W ? nodes[i][0] : 0 }}>
+                <button
+                  type="button"
+                  className={i === active ? 'is-now' : ''}
+                  aria-current={i === active ? 'step' : undefined}
+                  onClick={() => scrollToEl(root.current.querySelectorAll('.chap')[i], { offset: -150 })}
+                >
+                  {st.short}
+                </button>
+              </li>
             ))}
-          </div>
-          <div className="st__copies">
-            {layers.map((l) => {
-              const s = steps[l.i]
-              const ph = l.out ? lastPh.current[l.i] ?? 0 : pos.ph
-              return (
-                <div className={`st__copy ${l.out ? 'is-out' : 'is-in'}`} key={l.id} aria-hidden={l.out || undefined}>
-                  <p className="st__count hand">
-                    parada {l.i + 1} <span>de {N}</span>
-                  </p>
-                  <p className="st__when hand">
-                    <Icon name={s.icon} size={20} /> {s.when}
-                  </p>
-                  <h3 className="st__title display">{s.title}</h3>
-                  <p className="st__text">{s.text}</p>
-                  {l.i === 0 && <p className="st__hint hand" aria-hidden="true">rola pra seguir viagem ↓</p>}
-                  {photos[l.i].length > 1 && (
-                    <div className="st__dots" aria-hidden="true">
-                      {photos[l.i].map((_, k) => (
-                        <i key={k} className={k === ph ? 'is-on' : ''} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
+          </ol>
         </div>
       </div>
+
+      <ol className="trip__list">
+        {steps.map((s, i) => (
+          <li key={i} className={`chap chap--${i % 2 ? 'r' : 'l'} ${i === active ? 'is-now' : ''}`}>
+            <span className="chap__big display" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div className="chap__copy">
+              <p className="chap__count hand" data-rise>
+                parada {i + 1} <span>de {N}</span>
+              </p>
+              <p className="chap__when hand" data-rise>
+                <Icon name={s.icon} size={20} /> {s.when}
+              </p>
+              <h3 className="chap__title display" data-split>{s.title}</h3>
+              <p className="chap__text" data-rise>{s.text}</p>
+            </div>
+            <div className="chap__pics" data-rise>
+              <Pics photos={photos[i]} scene={s.scene} />
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   )
 }
@@ -232,11 +186,11 @@ export default function Journey() {
   const ids = v.itineraries
   const [itId, setItId] = useState(ids[0])
   const scope = useRef(null)
-  useReveal(scope, [vibe])
 
   useEffect(() => setItId(v.itineraries[0]), [vibe])
   const it = ITINERARIES[ids.includes(itId) ? itId : ids[0]]
   const steps = it.steps(v)
+  useReveal(scope, [vibe, it.id])
 
   // trocar de roteiro muda a altura da página
   useEffect(() => {
@@ -253,7 +207,7 @@ export default function Journey() {
             Como funciona o nosso <em>fim de semana?</em>
           </h2>
           <p className="lede jr__lede" data-rise>
-            Rola a tela: a gente vai parada por parada, de Itacolomi até a volta pra casa.
+            Parada por parada, de Itacolomi até a volta pra casa. O trajeto lá em cima vai mostrando onde a gente está.
           </p>
           {ids.length > 1 ? (
             <div className="jr__tabs" role="tablist" aria-label="Formatos de roteiro" data-rise>
@@ -269,7 +223,7 @@ export default function Journey() {
           )}
         </div>
       </div>
-      <Stage key={vibe + it.id} steps={steps} v={v} setMode={setMode} />
+      <Trip key={vibe + it.id} steps={steps} v={v} setMode={setMode} />
     </section>
   )
 }

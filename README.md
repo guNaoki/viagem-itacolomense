@@ -1,7 +1,7 @@
 # Janeiro 2027 — o nosso fim de semana
 
 Site pra galera escolher a viagem de janeiro: 3 "vibes" (Chácara Alta Vista, Cabanas Bosque Encantado, Ody Park),
-o fim de semana contado parada por parada, a estrada e a conta do caixa. Feito pra abrir no celular, pelo WhatsApp.
+o fim de semana contado parada por parada (com o trajeto grudado no topo), a estrada e a conta do caixa. Feito pra abrir no celular, pelo WhatsApp.
 
 **No ar:** https://viagem-itacolomense.vercel.app
 **Repositório:** https://github.com/guNaoki/viagem-itacolomense

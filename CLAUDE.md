@@ -32,20 +32,25 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   e são interpoladas com GSAP. O grão de papel é feito no shader.
 - **Seções** (ordem em `App.jsx`): Hero → Marquee → VibePicker → Journey → RouteSection → Money → Outro; Dock (navbar) e
   TopBar fixos. Seções que dependem da vibe usam `key={vibe}` no miolo pra remontar e reanimar.
-- **Jornada** (`Journey.jsx`): trilho alto (`.stage-track`, altura = tela × (1 + soma dos pesos)) com o palco em
-  `position: sticky`. Um ScrollTrigger sem pin lê o progresso e calcula parada (`pos.i`) e foto (`pos.ph`).
-  O carrinho anda continuamente (`quickTo`), e `--t` (0–1 dentro da parada) dá parallax à pilha de fotos.
-  Troca de parada é em camadas com fade CSS (`is-in`/`is-out`). Pesos: `STEP_BASE` + `STEP_PER_PHOTO` por foto.
+- **Jornada** (`Journey.jsx`): **rolagem normal, nada trava a tela** (decisão do dono do site — a versão com tela
+  travada foi descartada por causar problemas). As paradas são blocos `.chap` um embaixo do outro; só o trajeto em
+  miniatura (`.trip__bar`) é `position: sticky` no topo. Um ScrollTrigger por parada (`top 60%` → `bottom 60%`)
+  empurra o carrinho (`quickTo`) do meio do caminho anterior ao meio do próximo, acende o nó e chama
+  `setMode(step.time)`. Os rótulos do trajeto são botões que rolam até a parada. Fotos: 1 foto = polaroid,
+  várias = faixa com swipe (`Polaroids`), nenhuma = espaço reservado "em breve".
 - **Rota** (`RouteSection.jsx`): mesmo esquema — `.route__pin` sticky dentro de `.route__track` + `.route__runway`,
   timeline com `scrub` dirige estrada (DrawSVG) e carro (MotionPath).
 - **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam; se faltar dinheiro, mostra
   o limite tracejado e o texto em laranja.
 
 ## Regras de desempenho (o site já travou no celular por cada um destes)
-- **Não usar `pin` do ScrollTrigger.** Usar `position: sticky` + ScrollTrigger só pra ler progresso.
-  (Pin no celular treme com a barra de endereço e o pin-spacer briga com o React.)
+- **Não usar `pin` do ScrollTrigger** nem travar a tela. Se algo precisa ficar parado, `position: sticky`
+  + ScrollTrigger só pra ler progresso. (Pin no celular treme com a barra de endereço e o pin-spacer briga com o React.)
+- **Faixa horizontal dentro de grid precisa de `minmax(0, 1fr)`** (e `min-width: 0` no item). Senão a faixa estica a
+  coluna, o celular "abre" a página na horizontal e tudo que é `position: fixed` (navbar) some da tela.
+  `main` tem `overflow-x: clip` (clip, não hidden — hidden quebraria o sticky).
 - Rolagem: Lenis só suaviza **mouse/trackpad** (`syncTouch: false`); no toque a rolagem é a nativa.
-  `ScrollTrigger.config({ ignoreMobileResize: true })` e `useStableVh()` ignoram a barra de endereço.
+  `ScrollTrigger.config({ ignoreMobileResize: true })` ignora a barra de endereço.
 - **Nada de ler layout em handler de rolagem** (`scrollHeight`, `getBoundingClientRect`, `getBBox`…).
   Use `onScrollY(cb)` de `src/lib/scroll.js` (um único ouvinte, valores em cache).
 - **Não animar DrawSVG/`gsap.set({drawSVG})` por quadro**: ele mede o caminho (`getBBox`) a cada chamada.

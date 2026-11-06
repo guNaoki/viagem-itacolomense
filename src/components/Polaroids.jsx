@@ -39,7 +39,7 @@ export default function Polaroids({ photos, className = '' }) {
         <figure className="polaroid strip__item" role="listitem" key={p.src} style={{ '--tilt': `${TILT[i % TILT.length]}deg` }}>
           {i % 3 === 0 && <span className="tape" style={{ top: -12, left: '50%', transform: 'translateX(-50%) rotate(-3deg)' }} />}
           <div className="strip__img">
-            <img src={p.src} srcSet={srcSetOf(p.src)} sizes="(min-width: 900px) 320px, 72vw" alt={p.note} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
+            <img src={p.src} srcSet={p.srcSet || srcSetOf(p.src)} sizes="(min-width: 900px) 320px, 72vw" alt={p.note} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
           </div>
           <figcaption>{p.note}</figcaption>
         </figure>
