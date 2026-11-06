@@ -1,0 +1,25 @@
+.mq { position: relative; padding: 34px 0; overflow: hidden; }
+.mq__band {
+  background: var(--accent);
+  color: #fffdf7;
+  transform: rotate(-2.4deg) scale(1.06);
+  padding: 14px 0 12px;
+  box-shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.35);
+}
+:root[data-mode='night'] .mq__band { color: #14110f; }
+.mq__track { display: flex; width: max-content; will-change: transform; }
+.mq__set { display: flex; }
+.mq__w {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  padding-right: 22px;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(30px, 6vw, 54px);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  font-variation-settings: 'SOFT' 100, 'WONK' 1;
+}
+.mq__w--it { font-style: italic; font-weight: 400; }
+.mq__sun { width: 0.6em; height: 0.6em; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }

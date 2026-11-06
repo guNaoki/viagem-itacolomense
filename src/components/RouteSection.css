@@ -1,0 +1,93 @@
+.route__pin { padding-top: 6px; }
+.route__total { position: relative; display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-top: 24px; padding-bottom: 12px; }
+.route__total .display { font-size: clamp(40px, 8vw, 84px); font-style: italic; font-weight: 700; color: var(--accent-ink); }
+.route__total .hand { font-size: 26px; }
+.route__total .doodle { left: 0; bottom: 0; width: 70%; height: 14px; color: var(--accent); }
+.route__back { font-size: 24px; color: var(--ink-2); margin: 6px 0 0; }
+
+.map--tall { --lbl: 25px; }
+.map { position: relative; margin: 20px auto 0; width: fit-content; max-width: 100%; }
+.map__svg { display: block; height: min(calc(100svh - 300px), 540px); width: auto; max-width: 100%; overflow: visible; }
+.map__contour { fill: none; stroke: var(--ink); opacity: 0.08; stroke-width: 1.2; }
+.map__road-base { fill: none; stroke: var(--accent-2); opacity: 0.35; stroke-width: 18; stroke-linecap: round; }
+.map__road-top { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 12 10; stroke-linecap: round; }
+.map__dot { fill: var(--paper); stroke: var(--ink); stroke-width: 3; }
+.map__stop.is-dest .map__dot { fill: var(--accent); stroke: var(--accent); }
+.map__stop.is-small .map__dot { fill: var(--ink); stroke: none; }
+.map__halo { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 5; opacity: 0.7; }
+.map__label { font-family: var(--f-display); font-weight: 800; font-size: var(--lbl, 30px); letter-spacing: -0.02em; fill: var(--ink); }
+.map__label--s { font-size: 20px; font-weight: 600; fill: var(--ink-2); }
+.map__note, .map__leg { font-family: var(--f-hand); font-weight: 600; font-size: 24px; fill: var(--accent-ink); }
+.map__leg { fill: var(--ink-2); font-size: 26px; }
+.map__compass path { fill: var(--ink); }
+.map__compass text { font-family: var(--f-display); font-weight: 700; font-size: 16px; fill: var(--ink); }
+.map__car {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 35%, transparent), 0 10px 20px -8px rgba(0, 0, 0, 0.5);
+}
+
+.route__h { font-size: clamp(34px, 6vw, 64px); margin: 70px 0 0; }
+.route__h em { color: var(--accent-ink); }
+
+/* passagens (tickets) com picote */
+.tickets {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 30px var(--gut) 20px;
+  margin: 0 calc(var(--gut) * -1);
+  scrollbar-width: none;
+}
+.tickets::-webkit-scrollbar { display: none; }
+.ticket {
+  --notch: 13px;
+  flex: 0 0 min(82vw, 360px);
+  scroll-snap-align: center;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background: #fffaf0;
+  color: #1c1917;
+  border-radius: 18px;
+  transform: rotate(var(--r));
+  filter: drop-shadow(0 14px 22px rgba(120, 60, 10, 0.18));
+  -webkit-mask: radial-gradient(circle var(--notch) at 0 calc(100% - 92px), #0000 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% calc(100% - 92px), #0000 98%, #000) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle var(--notch) at 0 calc(100% - 92px), #0000 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% calc(100% - 92px), #0000 98%, #000) right / 51% 100% no-repeat;
+}
+:root[data-mode='night'] .ticket { background: #2a2420; color: #fef3c7; filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5)); }
+.ticket__main { padding: 24px 24px 20px; }
+.ticket__icon { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: #fff; margin-bottom: 16px; }
+.ticket__name { font-size: 28px; line-height: 1; margin: 0 0 10px; font-weight: 700; }
+.ticket__text { margin: 0; font-size: 15.5px; opacity: 0.8; }
+.ticket__stub {
+  height: 92px;
+  padding: 0 24px;
+  border-top: 2px dashed rgba(28, 25, 23, 0.22);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+:root[data-mode='night'] .ticket__stub { border-top-color: rgba(254, 243, 199, 0.2); }
+.ticket__price { font-size: 32px; font-weight: 800; font-style: italic; color: var(--accent-ink); line-height: 1; }
+:root[data-mode='night'] .ticket__price { color: var(--accent); }
+.ticket__note { font-family: var(--f-hand); font-size: 20px; font-weight: 600; opacity: 0.8; line-height: 1.05; margin-top: 4px; }
+
+.tickets--solo { overflow: visible; }
+.ticket--solo { flex-basis: min(100%, 520px); }
+
+@media (min-width: 960px) {
+  .tickets { overflow: visible; margin: 0; padding: 36px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .tickets--solo { grid-template-columns: minmax(0, 520px); }
+  .ticket { flex: none; }
+}
