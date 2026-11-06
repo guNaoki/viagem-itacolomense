@@ -1,16 +1,11 @@
-import { useEffect, useState } from 'react'
-import { scrollToEl, onScrollY } from '../lib/scroll'
+import { scrollToEl } from '../lib/scroll'
 import './TopBar.css'
 
-// Topo enxuto: só a marca. O dia/noite é automático (acompanha a jornada).
+// Topo enxuto: só a marca. O dia/noite é automático (acompanha a jornada)
+// e o trajeto da jornada gruda na mesma linha, à direita da marca.
 export default function TopBar() {
-  const [scrolled, setScrolled] = useState(false)
-  useEffect(() => {
-    const h = innerHeight * 0.5
-    return onScrollY((y) => setScrolled(y > h))
-  }, [])
   return (
-    <header className={`top ${scrolled ? 'is-scrolled' : ''}`}>
+    <header className="top">
       <a
         href="#topo"
         className="top__mark"

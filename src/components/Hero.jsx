@@ -36,8 +36,9 @@ export default function Hero() {
           .add(drawIn('.hero__hand [data-draw]', { duration: 0.9 }), '-=.4')
           .from('.hero__below > *', { y: 30, autoAlpha: 0, stagger: 0.08, duration: 0.9 }, '-=.9')
       })
-      const fallback = setTimeout(intro, 2500)
-      ;(document.fonts?.ready || Promise.resolve()).then(() => {
+      // a entrada começa quando a tela de carregamento sai
+      const fallback = setTimeout(intro, 4500)
+      ;(window.__appReady || document.fonts?.ready || Promise.resolve()).then(() => {
         clearTimeout(fallback)
         requestAnimationFrame(intro)
       })

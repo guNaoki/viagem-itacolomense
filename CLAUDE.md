@@ -34,7 +34,8 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   TopBar fixos. Seções que dependem da vibe usam `key={vibe}` no miolo pra remontar e reanimar.
 - **Jornada** (`Journey.jsx`): **rolagem normal, nada trava a tela** (decisão do dono do site — a versão com tela
   travada foi descartada por causar problemas). As paradas são blocos `.chap` um embaixo do outro; só o trajeto em
-  miniatura (`.trip__bar`) é `position: sticky` no topo. Um ScrollTrigger por parada (`top 60%` → `bottom 60%`)
+  miniatura (`.trip__bar`) é `position: sticky` no topo — compacto, **sem faixa de fundo**, na mesma linha da marca
+  "jan/27" (só contorno da cor do papel em volta do traço, nós e textos). O topo (`TopBar`) também não tem fundo. Um ScrollTrigger por parada (`top 60%` → `bottom 60%`)
   empurra o carrinho (`quickTo`) do meio do caminho anterior ao meio do próximo, acende o nó e chama
   `setMode(step.time)`. Os rótulos do trajeto são botões que rolam até a parada. Fotos: 1 foto = polaroid,
   várias = faixa com swipe (`Polaroids`), nenhuma = espaço reservado "em breve".
@@ -42,6 +43,9 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   timeline com `scrub` dirige estrada (DrawSVG) e carro (MotionPath).
 - **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam; se faltar dinheiro, mostra
   o limite tracejado e o texto em laranja.
+
+- **Tela de carregamento**: HTML+CSS inline no `index.html` (`#loader`, aparece antes do JS). `main.jsx` cria
+  `window.__appReady` (fontes + `load`, mínimo 650 ms, teto 4 s) e remove o loader; a entrada do Hero espera essa promessa.
 
 ## Regras de desempenho (o site já travou no celular por cada um destes)
 - **Não usar `pin` do ScrollTrigger** nem travar a tela. Se algo precisa ficar parado, `position: sticky`

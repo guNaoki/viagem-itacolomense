@@ -59,9 +59,10 @@ function Trip({ steps, v, setMode }) {
     ro.observe(routeBox.current)
     return () => ro.disconnect()
   }, [])
-  const H = 60
-  const pad = 26
-  const nodes = steps.map((_, i) => [pad + (i * (W - pad * 2)) / Math.max(1, N - 1), i % 2 ? H - 16 : 16])
+  // trajeto compacto: cabe na mesma linha da marca "jan/27"
+  const H = 36
+  const pad = 14
+  const nodes = steps.map((_, i) => [pad + (i * (W - pad * 2)) / Math.max(1, N - 1), i % 2 ? H - 10 : 10])
   let d = ''
   if (W) {
     d = `M${nodes[0][0]},${nodes[0][1]}`
@@ -127,30 +128,36 @@ function Trip({ steps, v, setMode }) {
       <div className="trip__bar">
         <div className="mr" ref={routeBox}>
           <svg className="mr__svg" width={W} height={H} viewBox={`0 0 ${W || 1} ${H}`} aria-hidden="true">
+            {/* contorno da cor do fundo: separa o traço do conteúdo que passa por baixo, sem precisar de faixa */}
+            <path d={d} className="mr__halo" />
             <path d={d} className="mr__ghost" />
             <path d={d} className="mr__fill" pathLength="1" />
             {W > 0 &&
               nodes.map(([x, y], i) => (
                 <g key={i} className={`mr__node ${i < active ? 'is-past' : ''} ${i === active ? 'is-now' : ''}`}>
-                  <circle cx={x} cy={y} r="13" />
-                  <text x={x} y={y + 5} textAnchor="middle">{i + 1}</text>
+                  <circle cx={x} cy={y} r="11.5" className="mr__ring" />
+                  <circle cx={x} cy={y} r="8.5" />
+                  <text x={x} y={y + 4} textAnchor="middle">{i + 1}</text>
                 </g>
               ))}
           </svg>
           <div className="mr__car" aria-hidden="true">
-            <Icon name={v.id === 'ody' ? 'van' : 'car'} size={18} stroke={2} />
+            <Icon name={v.id === 'ody' ? 'van' : 'car'} size={14} stroke={2.2} />
           </div>
-          <ol className="mr__labels" aria-label="Ir pra parada">
+          {W > 0 && (
+            <span className="mr__now hand" style={{ left: nodes[active][0] }} aria-hidden="true">
+              {steps[active].short}
+            </span>
+          )}
+          <ol className="mr__hits" aria-label="Ir pra parada">
             {steps.map((st, i) => (
-              <li key={i} style={{ left: W ? nodes[i][0] : 0 }}>
+              <li key={i} style={{ left: W ? nodes[i][0] : 0, top: W ? nodes[i][1] : 0 }}>
                 <button
                   type="button"
-                  className={i === active ? 'is-now' : ''}
+                  aria-label={`Parada ${i + 1}: ${st.short}`}
                   aria-current={i === active ? 'step' : undefined}
-                  onClick={() => scrollToEl(root.current.querySelectorAll('.chap')[i], { offset: -150 })}
-                >
-                  {st.short}
-                </button>
+                  onClick={() => scrollToEl(root.current.querySelectorAll('.chap')[i], { offset: -80 })}
+                />
               </li>
             ))}
           </ol>

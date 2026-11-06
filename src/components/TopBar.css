@@ -11,16 +11,6 @@
   pointer-events: none;
 }
 .top > * { pointer-events: auto; position: relative; }
-.top::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 -34px;
-  background: linear-gradient(var(--paper) 35%, color-mix(in srgb, var(--paper) 70%, transparent) 65%, transparent);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-.top.is-scrolled::before { opacity: 1; }
 .top__mark {
   font-family: var(--f-display);
   font-style: italic;
@@ -31,5 +21,7 @@
   min-height: 48px;
   display: inline-flex;
   align-items: center;
+  /* sem faixa de fundo: só um contorno da cor do papel pra separar do que passa por baixo */
+  text-shadow: 0 0 3px var(--paper), 0 0 3px var(--paper), 0 0 8px var(--paper);
 }
 .top__mark i { color: var(--accent); font-style: normal; padding: 0 1px; }

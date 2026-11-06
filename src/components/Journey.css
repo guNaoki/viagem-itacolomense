@@ -15,63 +15,63 @@
 .jr__tab-note { font-size: 21px; opacity: 0.85; }
 .jr__single { font-size: 28px; color: var(--accent-ink); margin: 26px 0 0; transform: rotate(-2deg); width: max-content; max-width: 100%; }
 
-/* ---------- trajeto grudado no topo (a única coisa que fica parada) ---------- */
+/* ---------- trajeto grudado no topo (a única coisa que fica parada) ----------
+   compacto, sem faixa de fundo: fica na mesma linha da marca "jan/27" */
 .trip { position: relative; }
 .trip__bar {
   position: sticky;
-  top: calc(52px + env(safe-area-inset-top));
-  z-index: 30;
-  padding: 10px var(--gut) 8px;
+  top: calc(10px + env(safe-area-inset-top));
+  z-index: 41;
+  height: 54px;
+  margin-bottom: -54px; /* não empurra o conteúdo */
+  padding: 0 var(--gut) 0 calc(var(--gut) + 92px);
   display: flex;
   justify-content: center;
-  background: color-mix(in srgb, var(--paper) 93%, transparent);
-  box-shadow: 0 1px 0 var(--line);
+  pointer-events: none;
 }
-@media (hover: hover) and (pointer: fine) {
-  .trip__bar { background: color-mix(in srgb, var(--paper) 78%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-}
-.mr { position: relative; width: 100%; max-width: 760px; height: 88px; }
+.mr { position: relative; width: 100%; max-width: 520px; height: 54px; pointer-events: auto; }
 .mr__svg { position: absolute; left: 0; top: 0; overflow: visible; }
-.mr__ghost { fill: none; stroke: var(--ink); opacity: 0.22; stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; }
-.mr__fill { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-dasharray: 0 1; stroke-linecap: round; }
-.mr__node circle { fill: var(--paper); stroke: var(--ink); stroke-width: 2; transition: fill 0.5s, stroke 0.5s; }
-.mr__node text { font-family: var(--f-hand); font-weight: 700; font-size: 17px; fill: var(--ink); transition: fill 0.5s; }
-.mr__node.is-past circle { fill: var(--ink); }
+.mr__halo { fill: none; stroke: var(--paper); stroke-width: 7; stroke-linecap: round; opacity: 0.9; }
+.mr__ghost { fill: none; stroke: var(--ink); opacity: 0.35; stroke-width: 1.6; stroke-dasharray: 2 6; stroke-linecap: round; }
+.mr__fill { fill: none; stroke: var(--accent); stroke-width: 3; stroke-dasharray: 0 1; stroke-linecap: round; }
+.mr__node .mr__ring { fill: var(--paper); stroke: none; opacity: 0.9; }
+.mr__node circle:not(.mr__ring) { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; transition: fill 0.5s, stroke 0.5s; }
+.mr__node text { font-family: var(--f-hand); font-weight: 700; font-size: 13px; fill: var(--ink); transition: fill 0.5s; }
+.mr__node.is-past circle:not(.mr__ring) { fill: var(--ink); }
 .mr__node.is-past text { fill: var(--paper); }
-.mr__node.is-now circle { fill: var(--accent); stroke: var(--accent); }
+.mr__node.is-now circle:not(.mr__ring) { fill: var(--accent); stroke: var(--accent); }
 .mr__node.is-now text { fill: #fff; }
 .mr__car {
   position: absolute;
   left: 0;
   top: 0;
   z-index: 2;
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: grid;
   place-items: center;
   background: var(--ink);
   color: var(--paper);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 40%, transparent), 0 8px 16px -6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px color-mix(in srgb, var(--accent) 55%, transparent);
   pointer-events: none;
 }
-.mr__labels { list-style: none; margin: 0; padding: 0; position: absolute; left: 0; right: 0; top: 60px; height: 28px; }
-.mr__labels li { position: absolute; transform: translateX(-50%); }
-.mr__labels li:first-child { transform: translateX(-26px); }
-.mr__labels li:last-child { transform: translateX(calc(-100% + 26px)); }
-.mr__labels button {
-  min-height: 28px;
-  padding: 0 2px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-2);
+/* só o nome da parada atual aparece, com contorno da cor do fundo */
+.mr__now {
+  position: absolute;
+  top: 37px;
+  transform: translateX(-50%);
+  font-size: 17px;
+  line-height: 1;
   white-space: nowrap;
-  opacity: 0.7;
-  transition: color 0.4s, opacity 0.4s;
+  color: var(--accent-ink);
+  text-shadow: 0 0 3px var(--paper), 0 0 3px var(--paper), 0 0 6px var(--paper);
+  transition: left 0.45s var(--ease);
+  pointer-events: none;
 }
-.mr__labels button.is-now { color: var(--accent-ink); opacity: 1; }
+.mr__hits { list-style: none; margin: 0; padding: 0; }
+.mr__hits li { position: absolute; width: 0; height: 0; }
+.mr__hits button { position: absolute; left: -16px; top: -16px; width: 32px; height: 32px; border-radius: 50%; }
 
 /* ---------- as paradas: rolagem normal, uma embaixo da outra ---------- */
 .trip__list { list-style: none; margin: 0 auto; padding: 0 var(--gut); max-width: var(--maxw); }
@@ -134,8 +134,7 @@
 .chap__cam { width: 40px; height: 40px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
 
 @media (min-width: 900px) {
-  .trip__bar { top: 56px; }
-  .mr__labels button { font-size: 12px; }
+  .trip__bar { padding: 0 var(--gut); }
   .chap { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 60px; padding: 110px 0 100px; }
   .chap--r .chap__copy { order: 2; }
   .chap--r .chap__pics { order: 1; }
