@@ -1,10 +1,9 @@
 .outro { padding-bottom: 130px; }
 .outro__title { position: relative; font-size: clamp(110px, 30vw, 360px); font-weight: 900; font-style: italic; letter-spacing: -0.06em; width: max-content; max-width: 100%; padding: 0 0.08em 0.05em 0; margin-bottom: 26px; }
 .outro__title .doodle { left: 4%; bottom: 0; width: 92%; height: 22px; color: var(--accent); }
-.outro__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 
 /* e se fosse outra vibe? */
-.other { margin-top: 90px; }
+.other { margin-top: 70px; }
 .other__q { font-size: clamp(30px, 6vw, 46px); margin: 0 0 18px; transform: rotate(-2deg); width: max-content; color: var(--accent-ink); }
 .other__list { display: grid; gap: 14px; }
 .other__card {

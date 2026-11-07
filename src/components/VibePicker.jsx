@@ -4,9 +4,9 @@ import { VIBES, VIBE_ORDER } from '../data/trip'
 import { gsap, useGSAP, reduceMotion, drawIn } from '../lib/gsap'
 import { useReveal } from '../lib/useReveal'
 import Mural from './Mural'
-import Doodle from './Doodle'
+import Sketch from './Sketch'
 import Icon from './Icons'
-import { small, srcSetOf } from '../lib/img'
+import { srcSetOf } from '../lib/img'
 import './VibePicker.css'
 
 // origem da "inundação" de cor: o ponto do toque (ou o centro do botão, no teclado)
@@ -24,8 +24,11 @@ function Detail({ v }) {
       gsap.from('.vd__head > *', { y: 30, autoAlpha: 0, stagger: 0.07, duration: 0.9, delay: 0.2 })
       gsap.from('.mural__item', { y: 120, rotate: (i) => (i % 2 ? 14 : -14), autoAlpha: 0, stagger: 0.07, duration: 1.1, delay: 0.3, ease: 'back.out(1.3)' })
       gsap.from('.vd__reveal', { y: 24, autoAlpha: 0, stagger: 0.08, duration: 0.8, delay: 0.5 })
-      gsap.from('.story__beats li', { x: -24, autoAlpha: 0, stagger: 0.12, duration: 0.8, scrollTrigger: { trigger: '.story', start: 'top 80%', once: true } })
-      drawIn('.vd__circled path', { scrollTrigger: { trigger: '.vd__doing', start: 'top 85%', once: true } })
+      // desenhos do "o que rola": a mancha de cor aparece e o traço se desenha
+      const st = { trigger: '.rola', start: 'top 80%', once: true }
+      gsap.from('.rola__item', { y: 30, autoAlpha: 0, stagger: 0.1, duration: 0.8, scrollTrigger: st })
+      gsap.from('.sketch__fill > *', { scale: 0.6, autoAlpha: 0, transformOrigin: '50% 50%', stagger: 0.05, duration: 0.9, delay: 0.3, ease: 'back.out(1.6)', scrollTrigger: st })
+      drawIn('.sketch__ink > *', { duration: 1.3, stagger: 0.025, scrollTrigger: st })
     },
     { scope: ref },
   )
@@ -40,42 +43,20 @@ function Detail({ v }) {
       <Mural photos={v.photos} layout="feature" />
       <p className="vd__hint hand vd__reveal" aria-hidden="true">toca na foto pra ver grande</p>
 
-      {v.story && (
-        <aside className="story vd__reveal" aria-label={v.story.title}>
-          <span className="tape" style={{ top: -13, right: 34, transform: 'rotate(5deg)' }} />
-          <p className="story__title hand">{v.story.title}…</p>
-          <ol className="story__beats">
-            {v.story.beats.map(([t, txt]) => (
-              <li key={t}>
-                <span className="story__t hand">{t}</span>
-                <span className="story__txt">{txt}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="story__end display">{v.story.end}</p>
-        </aside>
-      )}
+      <div className="rola">
+        <h4 className="vd__h hand">o que rola</h4>
+        <ul className="rola__list">
+          {v.doing.map((d) => (
+            <li key={d.t} className="rola__item">
+              <Sketch art={d.art} />
+              <span className="rola__t hand">{d.t}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <div className="vd__grid">
         <p className="vd__pitch vd__reveal">{v.pitch}</p>
-
-        <div className="vd__col vd__reveal">
-          <h4 className="vd__h hand">o que rola</h4>
-          <ul className="vd__doing">
-            {v.doing.map((d, i) => (
-              <li key={d}>
-                {i === 0 ? (
-                  <span className="vd__circled">
-                    {d}
-                    <Doodle type="circle" stroke={2.4} draw={false} />
-                  </span>
-                ) : (
-                  d
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
 
         <div className="vd__col vd__reveal">
           <h4 className="vd__h hand">{v.id === 'ody' ? 'e pra dormir?' : 'onde a gente dorme'}</h4>
@@ -87,23 +68,6 @@ function Detail({ v }) {
         </div>
       </div>
 
-      {v.plan_b && (
-        <aside className="planb vd__reveal">
-          <span className="tape" style={{ top: -12, left: 28, transform: 'rotate(-4deg)' }} />
-          <div className="planb__pics" aria-hidden="true">
-            {v.plan_b.photos.map((src, i) => (
-              <img key={src} src={small(src)} alt="" loading="lazy" decoding="async" style={{ '--r': `${[-6, 4, -2][i]}deg` }} />
-            ))}
-          </div>
-          <div>
-            <p className="planb__title display">{v.plan_b.title}</p>
-            <p className="planb__text">{v.plan_b.text}</p>
-            <a className="planb__link" href={v.plan_b.link} target="_blank" rel="noopener noreferrer">
-              ver o sítio <Icon name="out" size={16} />
-            </a>
-          </div>
-        </aside>
-      )}
     </div>
   )
 }

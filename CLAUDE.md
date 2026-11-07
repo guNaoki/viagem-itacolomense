@@ -12,8 +12,8 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 
 ## Idioma e tom
 - Todo texto do site em **pt-BR informal**, voz de amigo ("bora", "a galera"). Comentários de código também em pt-BR.
-- O site é **pra todo mundo**: não citar nomes dos organizadores. Regra do caixa fica genérica
-  ("quem organiza entra com R$ 600").
+- O site é **pra todo mundo**: não citar nomes dos organizadores. **Não mostrar que alguém paga mais**: uma pessoa
+  entra com R$ 600 (`TRIP.extraPeople`/`extraPrice`), mas isso só entra na conta do `caixa()`, nunca aparece na tela.
 - Visual sem "cara de IA": nada de emoji como ícone, cards de vidro em grade, gradientes genéricos.
   A linguagem é pôster/zine de verão: Fraunces (títulos), Bricolage Grotesque (texto), Caveat (anotações à mão),
   polaroids com fita crepe, rabiscos que se desenham, passagens picotadas.
@@ -30,7 +30,7 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 - **Céu** (`src/gl/Sky.jsx`): WebGL puro, um triângulo em tela cheia. Lê o objeto mutável `sky` de
   `src/gl/sky-state.js` a cada quadro (fora do React). Cores/forma do horizonte por vibe vêm de `VIBES[x].sky`
   e são interpoladas com GSAP. O grão de papel é feito no shader.
-- **Seções** (ordem em `App.jsx`): Hero → Marquee → VibePicker → Journey → RouteSection → Money → Galera → Outro; Dock (navbar) e
+- **Seções** (ordem em `App.jsx`): Hero → Marquee → VibePicker → Journey → RouteSection → Money → Outro; Dock (navbar) e
   TopBar fixos. Seções que dependem da vibe usam `key={vibe}` no miolo pra remontar e reanimar.
 - **Jornada** (`Journey.jsx`): **rolagem normal, nada trava a tela** (decisão do dono do site — a versão com tela
   travada foi descartada por causar problemas). As paradas são blocos `.chap` um embaixo do outro; só o trajeto em
@@ -42,13 +42,15 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 - **Fotos em mural** (`Mural.jsx`): nada de faixa pra arrastar (decisão do dono). Layouts `feature` (VibePicker: 1 grande +
   até 5, "+N" no último), `grid` (Jornada) e `masonry` (Galera, sem cortar). Tocar abre a foto grande (`Lightbox`,
   trava a rolagem com `lockScroll` de `scroll.js`).
-- **"Imagina o sábado"**: `VIBES[x].story` (bilhete pautado no VibePicker); só Chácara e Cabanas têm.
-- **Galera** (`Galera.jsx`): memes/fotos do grupo em `src/assets/galera/` (`src/data/galera.js`); texto em `GALERA`
-  no `trip.js`. Sem arquivo na pasta a seção não aparece.
+- **"O que rola"** (`Sketch.jsx`): cada item de `VIBES[x].doing` (`{ t, art }`) vira um desenho SVG à mão — mancha de
+  cor fora do registro (risografia) + traço que se desenha (`pathLength="1"` + `drawIn`). Desenho novo = entrada no `ART`.
+  (Bilhete "imagina o sábado", carta na manga e seção de memes foram testados e descartados pelo dono.)
 - **Rota** (`RouteSection.jsx`): mesmo esquema — `.route__pin` sticky dentro de `.route__track` + `.route__runway`,
   timeline com `scrub` dirige estrada (DrawSVG) e carro (MotionPath).
-- **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam; se faltar dinheiro, mostra
-  o limite tracejado e o texto em laranja.
+- **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam. A barra não tem legenda: cada pedaço
+  tem nome e valor escritos em cima/embaixo (faixas `up`/`down`/`up2`/`down2`, distribuídas medindo as etiquetas só quando
+  muda tamanho/número). A conta usa o valor **mais alto** de cada item; a frase do topo diz quanto sobra (e por pessoa).
+  Se faltar dinheiro, mostra o limite tracejado e o texto em laranja.
 
 - **Tela de carregamento**: HTML+CSS inline no `index.html` (`#loader`, aparece antes do JS). `main.jsx` cria
   `window.__appReady` (fontes + `load`, mínimo 650 ms, teto 4 s) e remove o loader; a entrada do Hero espera essa promessa.

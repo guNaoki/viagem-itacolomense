@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useTrip } from '../lib/trip-context'
 import { TRIP, VIBES, VIBE_ORDER, caixa } from '../data/trip'
 import { useReveal } from '../lib/useReveal'
@@ -9,15 +9,14 @@ import './Money.css'
 const brl = (n) => 'R$ ' + Math.round(n).toLocaleString('pt-BR')
 const range = (a, b) => (a === b ? brl(a) : `${brl(a)} a ${Math.round(b).toLocaleString('pt-BR')}`)
 
-// Marcas de contagem (risquinhos de 5 em 5), os 2 organizadores em destaque.
+// Marcas de contagem (risquinhos de 5 em 5), uma por pessoa.
 function Tally({ n }) {
   const marks = []
   for (let i = 0; i < n; i++) {
     const g = Math.floor(i / 5)
     const k = i % 5
     const gx = g * 70
-    const org = i < TRIP.organizers
-    if (k < 4) marks.push(<path key={i} d={`M${gx + 8 + k * 13},6 L${gx + 6 + k * 13 + (k % 2)},50`} className={org ? 'is-org' : ''} />)
+    if (k < 4) marks.push(<path key={i} d={`M${gx + 8 + k * 13},6 L${gx + 6 + k * 13 + (k % 2)},50`} />)
     else marks.push(<path key={i} d={`M${gx + 1},40 L${gx + 52},14`} className="is-cross" />)
   }
   const groups = Math.ceil(n / 5)
@@ -36,50 +35,118 @@ const resolve = (budget, n) =>
       : it,
   )
 
+/*
+  Barra do orçamento com os nomes escritos em cima/embaixo de cada pedaço (sem legenda separada).
+  A conta usa o valor mais alto de cada item: o que "sobra" é o mínimo garantido.
+  As etiquetas são distribuídas em duas faixas (em cima e embaixo) pra não se encostarem;
+  a medição roda só quando muda o tamanho ou os números, nunca na rolagem.
+*/
 function Bar({ budget, total, n, compact, name }) {
   const items = resolve(budget, n)
   const sumMax = items.reduce((s, it) => s + it.max, 0)
   const sumMin = items.reduce((s, it) => s + it.min, 0)
-  const restMin = total - sumMax
-  const restMax = total - sumMin
+  const rest = total - sumMax // sobra garantida (pior caso)
+  const restBest = total - sumMin
   const scale = Math.max(total, sumMax) // se faltar dinheiro, a barra passa do caixa
-  const pct = (x) => `${(Math.max(0, x) / scale) * 100}%`
-  const segs = []
-  items.forEach((it) => {
-    segs.push({ key: it.key, w: it.min, cls: `seg--${it.key}` })
-    segs.push({ key: it.key + '-r', w: it.max - it.min, cls: 'seg--range' })
-  })
-  segs.push({ key: 'rest', w: restMin, cls: 'seg--rest' })
 
-  let rest
-  if (restMin >= 0) rest = <>sobra pra {budget.restLabel} <b>{range(restMin, restMax)}</b></>
-  else if (restMax < 0) rest = <>falta pra fechar a conta <b className="is-short">{range(-restMax, -restMin)}</b></>
-  else
-    rest = (
+  const segs = items.map((it) => ({
+    key: it.key,
+    w: it.max,
+    name: it.label.charAt(0).toLowerCase() + it.label.slice(1),
+    val: it.min === it.max ? brl(it.max) : `até ${brl(it.max)}`,
+  }))
+  if (rest > 0) segs.push({ key: 'rest', w: rest, name: 'sobra', val: brl(rest) })
+  let acc = 0
+  segs.forEach((sg) => {
+    sg.c = (acc + sg.w / 2) / scale // centro do pedaço (0–1)
+    acc += sg.w
+  })
+
+  const chart = useRef(null)
+  const lbls = useRef([])
+  const [W, setW] = useState(0)
+  const [pos, setPos] = useState(null)
+  useLayoutEffect(() => {
+    const ro = new ResizeObserver(([e]) => setW(Math.round(e.contentRect.width)))
+    ro.observe(chart.current)
+    return () => ro.disconnect()
+  }, [])
+  const sig = segs.map((sg) => sg.key + sg.w).join() + W
+  useLayoutEffect(() => {
+    if (!W) return
+    // faixas: em cima, embaixo e, se precisar, uma segunda linha mais afastada de cada lado
+    const LANES = ['up', 'down', 'up2', 'down2']
+    const ends = Object.fromEntries(LANES.map((l) => [l, -Infinity]))
+    const gap = 10
+    setPos(
+      segs.map((sg, i) => {
+        const w = lbls.current[i]?.offsetWidth || 0
+        const c = sg.c * W
+        const want = Math.min(Math.max(c - w / 2, 0), W - w)
+        const lane = LANES.find((l) => want >= ends[l] + gap) || LANES.reduce((a, l) => (ends[l] < ends[a] ? l : a))
+        const x = Math.min(Math.max(want, ends[lane] + gap), W - w)
+        ends[lane] = x + w
+        return { lane, x, c }
+      }),
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sig])
+
+  let head
+  if (rest >= 0)
+    head = (
       <>
-        sobra até <b>{brl(restMax)}</b> — ou falta <b className="is-short">{brl(-restMin)}</b> se a hospedagem vier no valor mais alto
+        sobra <b>{brl(rest)}</b> pra {budget.restLabel}
+        <small> (~{brl(rest / n)} por pessoa)</small>
       </>
     )
+  else if (restBest >= 0)
+    head = (
+      <>
+        pode faltar <b className="is-short">{brl(-rest)}</b> se a hospedagem vier no valor mais alto
+      </>
+    )
+  else
+    head = (
+      <>
+        falta <b className="is-short">{brl(-rest)}</b> pra fechar a conta
+      </>
+    )
+
+  const ranged = items.filter((it) => it.min !== it.max)
 
   return (
     <div className={`bar ${compact ? 'bar--compact' : ''}`}>
       {name && <p className="bar__name">{name}</p>}
-      <div className="bar__track">
-        {segs.map((sg) => (
-          <span key={sg.key} className={`seg ${sg.cls}`} style={{ width: pct(sg.w) }} />
-        ))}
-        {sumMax > total && <span className="bar__limit" style={{ left: pct(total) }} title="até aqui é o caixa" />}
+      <p className={`bar__head ${rest < 0 ? 'is-short' : ''}`}>{head}</p>
+      <div
+        className={`bar__chart ${pos?.some((q) => q.lane === 'up2') ? 'has-up2' : ''} ${pos?.some((q) => q.lane === 'down2') ? 'has-down2' : ''}`}
+        ref={chart}
+      >
+        <div className="bar__track">
+          {segs.map((sg) => (
+            <span key={sg.key} className={`seg seg--${sg.key}`} style={{ width: `${(sg.w / scale) * 100}%` }} />
+          ))}
+          {sumMax > total && <span className="bar__limit" style={{ left: `${(total / scale) * 100}%` }} title="até aqui é o caixa" />}
+        </div>
+        {segs.map((sg, i) => {
+          const p = pos?.[i]
+          return (
+            <span key={sg.key} className={`lbl lbl--${p?.lane || 'up'} lbl--${sg.key}`} style={{ visibility: p ? 'visible' : 'hidden' }}>
+              {p && <i className="lbl__tick" style={{ left: p.c }} />}
+              <span className="lbl__box" ref={(el) => (lbls.current[i] = el)} style={{ left: p?.x || 0 }}>
+                <span className="lbl__n hand">{sg.name}</span>
+                <b className="lbl__v">{sg.val}</b>
+              </span>
+            </span>
+          )
+        })}
       </div>
-      <ul className="bar__legend">
-        {items.map((it) => (
-          <li key={it.key}>
-            <i className={`dot seg--${it.key}`} /> {it.label} <b>{range(it.min, it.max)}</b>
-          </li>
-        ))}
-        <li className={`bar__rest ${restMin < 0 ? 'is-short' : ''}`}>
-          <i className="dot seg--rest" /> <span>{rest}</span>
-        </li>
-      </ul>
+      {ranged.length > 0 && (
+        <p className="bar__fine">
+          {ranged.map((it) => `${it.label.toLowerCase()} sai entre ${brl(it.min)} e ${brl(it.max)}`).join('; ')}: a conta usa o valor mais alto, então se vier mais barato sobra mais.
+        </p>
+      )}
     </div>
   )
 }
@@ -142,9 +209,6 @@ export default function Money() {
             </span>
             <span className="hand money__pp">por pessoa. só isso.</span>
           </div>
-          <p className="money__org" data-rise>
-            Quem organiza entra com {brl(TRIP.organizerPrice)} (são {TRIP.organizers} organizadores).
-          </p>
         </div>
 
         <div className="money__sim" data-rise>
@@ -159,19 +223,15 @@ export default function Money() {
           </div>
           <div className="money__tally">
             <Tally n={n} />
-            <span className="hand money__tally-note">os 2 risquinhos coloridos são os organizadores</span>
           </div>
           <p className="money__total">
             <span className="money__total-l">no caixa</span>
             <strong className="display" ref={totalRef}>{brl(caixa(n))}</strong>
           </p>
-          <p className="money__math">
-            {n - TRIP.organizers} × {brl(TRIP.price)} + {TRIP.organizers} × {brl(TRIP.organizerPrice)}
-          </p>
         </div>
 
         <div className="money__split">
-          <p className="hand money__base">pra onde vai — com {n} pessoas ({brl(total)} no caixa)</p>
+          <p className="hand money__base">pra onde vão os {brl(total)} (com {n} pessoas)</p>
           <p className="money__label">{v.budget.label}</p>
           <Bar budget={v.budget} total={total} n={n} />
 

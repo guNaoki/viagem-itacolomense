@@ -14,21 +14,14 @@ export const TRIP = {
   countdownLabel: 'pra janeiro chegar',
   people: { min: 9, base: 12, max: 15, scenarios: [9, 12, 15] },
   price: 300,
-  organizerPrice: 600,
-  organizers: 2,
+  // uma pessoa entra com R$ 600 (não aparece no site, só entra na conta do caixa)
+  extraPrice: 600,
+  extraPeople: 1,
 }
 
-/* Seção "A gente" (memes e fotos em src/assets/galera/) */
-export const GALERA = {
-  eyebrow: 'o motivo de tudo isso',
-  title: 'A gente.',
-  text: 'Lugar a gente escolhe no voto. O que faz a viagem valer é quem vai estar lá. Então, antes de decidir, um lembrete de com quem é essa bagunça:',
-  end: 'Janeiro é com vocês.',
-}
-
-/* Quanto entra no caixa com N pessoas (os 2 organizadores pagam R$ 600). */
+/* Quanto entra no caixa com N pessoas. */
 export const caixa = (n) =>
-  (n - TRIP.organizers) * TRIP.price + TRIP.organizers * TRIP.organizerPrice
+  (n - TRIP.extraPeople) * TRIP.price + TRIP.extraPeople * TRIP.extraPrice
 
 /* ------------------------------------------------------------------
    FOTOS DA JORNADA (valem pra todas as vibes)
@@ -72,20 +65,15 @@ export const VIBES = {
     marquee: ['futebol na grama', 'piscina com cascata', 'futsabão', 'sinuca', 'fogão a lenha', 'sarau', 'violão'],
     pitch:
       '3.000 m² só pra gente. Campeonato de futebol na grama, mergulho na piscina com cascata, futebol de sabão escorregando à tarde, sinuca no salão e churrasco no fogão a lenha.',
-    doing: ['campeonato na grama', 'piscina com cascata', 'futsabão inflável', 'sinuca', 'churrasco no fogão a lenha'],
+    // "o que rola": cada item vira um desenho (nomes em src/components/Sketch.jsx)
+    doing: [
+      { t: 'campeonato na grama', art: 'futebol' },
+      { t: 'piscina com cascata', art: 'cascata' },
+      { t: 'futsabão inflável', art: 'futsabao' },
+      { t: 'sinuca', art: 'sinuca' },
+      { t: 'churrasco no fogão a lenha', art: 'churrasco' },
+    ],
     stay: 'Cabe até 15 com folga: 3 quartos, 8 camas + colchões extras e 3 banheiros.',
-    // "imagina só": o sábado contado hora a hora (aparece logo depois das fotos)
-    story: {
-      title: 'Imagina o sábado',
-      beats: [
-        ['15h', 'Time escolhido no par ou ímpar e alguém já jurando que tá "sem ritmo".'],
-        ['17h', 'Futsabão. Ninguém para em pé, todo mundo chora de rir.'],
-        ['18h30', 'Tira o sabão na cascata da piscina enquanto o sol vai embora.'],
-        ['20h', 'Cheiro de fogão a lenha, churrasco saindo e sinuca valendo nada.'],
-        ['23h', 'O violão aparece. Ninguém sabe a letra inteira e todo mundo canta.'],
-      ],
-      end: 'A casa inteira só pra gente, e cabe todo mundo junto debaixo do mesmo teto.',
-    },
     link: 'https://www.airbnb.com.br/rooms/804996807567433942',
     linkLabel: 'Ver o anúncio no Airbnb',
     photos: [
@@ -140,19 +128,15 @@ export const VIBES = {
     marquee: ['fogueira', 'violão & ukulele', 'cinema no telão', 'ping-pong', 'céu estrelado', 'futsabão', 'sarau'],
     pitch:
       'Acampamento chique no meio da mata: 5 cabanas de madeira, roda de fogueira debaixo das estrelas, cinema ao ar livre no telão e mesa de ping-pong.',
-    doing: ['roda de fogueira', 'sarau com violão', 'cinema no telão', 'ping-pong', 'noite estrelada'],
+    // "o que rola": cada item vira um desenho (nomes em src/components/Sketch.jsx)
+    doing: [
+      { t: 'roda de fogueira', art: 'fogueira' },
+      { t: 'sarau com violão', art: 'violao' },
+      { t: 'cinema no telão', art: 'telao' },
+      { t: 'ping-pong', art: 'pingpong' },
+      { t: 'noite estrelada', art: 'estrelas' },
+    ],
     stay: '5 cabanas com colchão de casal — até 10 nas cabanas, acima disso a gente combina colchão extra. Cozinha e banheiros compartilhados. Não tem piscina nem campo.',
-    story: {
-      title: 'Imagina a noite',
-      beats: [
-        ['18h', 'Chega, larga a mochila e cada um escolhe sua cabana de madeira.'],
-        ['19h30', 'Sempre tem um que se acha especialista em acender fogueira.'],
-        ['21h', 'Violão e ukulele na roda. Quem não canta bate palma fora do tempo.'],
-        ['23h', 'Filme no telão no meio do mato, todo mundo embolado no cobertor.'],
-        ['2h', 'O varal de luzinha aceso e o céu cheio da estrela que a cidade esconde.'],
-      ],
-      end: 'É o tipo de noite que vira história contada em todo encontro depois.',
-    },
     link: 'https://www.airbnb.com.br/rooms/1726935758701641036',
     linkLabel: 'Ver o anúncio no Airbnb',
     photos: [
@@ -164,12 +148,6 @@ export const VIBES = {
       { src: '/img/cabanas-4.webp', note: 'teto de madeira' },
       { src: '/img/cabanas-5.webp', note: 'céu de verdade' },
     ],
-    plan_b: {
-      title: 'Carta na manga: Sítio Vilarejo',
-      text: 'Se a galera quiser ficar nessa mesma região de Cambé mas com piscina e campo pra 16+ pessoas, tem o sítio aqui do lado.',
-      link: 'https://www.airbnb.com.br/rooms/1078200200448751096',
-      photos: ['/img/vilarejo-1.webp', '/img/vilarejo-3.webp', '/img/vilarejo-2.webp'],
-    },
     scenes: {
       sarau: [
         { src: '/img/cabanas-1.webp', note: 'o varal aceso' },
@@ -212,7 +190,14 @@ export const VIBES = {
     marquee: ['piscina de ondas', 'tsunami de 3 m', 'toboágua', 'rio lento', 'quiosque reservado', 'van da galera'],
     pitch:
       'Fim de semana inteiro com a família em Novo Itacolomi e domingo de excursão numa van fechada só nossa: piscina de ondas de 3 metros (a Tsunami), toboáguas radicais, rio lento e quiosque de churrasco reservado.',
-    doing: ['piscina de ondas Tsunami', 'toboáguas radicais', 'rio lento', 'quiosque reservado', 'van só nossa'],
+    // "o que rola": cada item vira um desenho (nomes em src/components/Sketch.jsx)
+    doing: [
+      { t: 'piscina de ondas Tsunami', art: 'onda' },
+      { t: 'toboáguas radicais', art: 'tobogua' },
+      { t: 'rio lento', art: 'boia' },
+      { t: 'quiosque reservado', art: 'quiosque' },
+      { t: 'van só nossa', art: 'van' },
+    ],
     stay: 'Sem hospedagem: a base é Novo Itacolomi, com a família. É bate-volta de domingo.',
     link: 'https://odypark.com.br/',
     linkLabel: 'Ver o site do Ody Park',

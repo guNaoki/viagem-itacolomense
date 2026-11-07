@@ -108,81 +108,32 @@
   font-weight: 400;
 }
 .vd__h { font-size: 28px; margin: 0 0 10px; color: var(--accent-ink); transform: rotate(-2deg); width: max-content; font-weight: 600; }
-.vd__doing { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 10px; font-size: 19px; font-weight: 500; }
-.vd__doing li:not(:last-child)::after { content: ' /'; color: var(--accent); font-weight: 700; }
-.vd__circled { position: relative; display: inline-block; padding: 0 6px; }
-.vd__circled .doodle { left: -12px; top: -14px; width: calc(100% + 24px); height: calc(100% + 26px); color: var(--accent); }
 .vd__stay { margin: 0 0 22px; color: var(--ink-2); max-width: 30em; }
 
 @media (min-width: 900px) {
-  .vd__grid { grid-template-columns: 1.35fr 1fr 1fr; gap: 56px; align-items: start; }
+  .vd__grid { grid-template-columns: 1.4fr 1fr; gap: 72px; align-items: start; }
 }
 
-/* carta na manga */
-.planb {
-  position: relative;
-  margin-top: 46px;
-  padding: 26px 22px 24px;
-  background: var(--sheet);
-  box-shadow: inset 0 0 0 1px var(--line), 0 14px 30px -20px rgba(60, 30, 5, 0.4);
-  transform: rotate(-0.8deg);
+/* "o que rola" em desenhos */
+.rola { margin: 40px 0 46px; }
+.rola__list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
   display: grid;
-  gap: 20px;
-  max-width: 760px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 10px;
 }
-.planb__pics { display: flex; }
-.planb__pics img {
-  width: 96px;
-  height: 116px;
-  object-fit: cover;
-  border: 5px solid #fffdf7;
-  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.5);
-  transform: rotate(var(--r));
-  margin-right: -18px;
-}
-.planb__title { font-size: clamp(26px, 3vw, 34px); margin: 0 0 8px; font-weight: 700; }
-.planb__text { margin: 0 0 12px; color: var(--ink-2); }
-.planb__link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 600; color: var(--accent-ink); }
-@media (min-width: 700px) { .planb { grid-template-columns: auto 1fr; align-items: center; gap: 40px; padding: 30px 34px; } }
-
-/* "imagina o sábado": bilhete em papel pautado */
-.story {
-  position: relative;
-  margin: 30px 0 50px;
-  padding: 30px 22px 26px;
-  max-width: 760px;
-  background:
-    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in srgb, var(--accent) 22%, transparent) 33px 34px),
-    var(--sheet);
-  box-shadow: inset 0 0 0 1px var(--line), 0 18px 34px -22px rgba(60, 30, 5, 0.45);
-  transform: rotate(0.6deg);
-}
-.story::before {
-  /* margem vermelha do caderno */
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 64px;
-  width: 1.5px;
-  background: color-mix(in srgb, var(--ember) 45%, transparent);
-}
-.story__title { margin: 0 0 12px; font-size: clamp(34px, 7vw, 48px); color: var(--accent-ink); transform: rotate(-2deg); width: max-content; }
-.story__beats { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.story__beats li { display: grid; grid-template-columns: 56px 1fr; gap: 0 18px; align-items: baseline; }
-.story__t { font-size: 24px; color: var(--accent-ink); text-align: right; }
-.story__txt { font-size: 17px; line-height: 1.4; }
-.story__end {
-  margin: 22px 0 0;
-  font-size: clamp(22px, 3vw, 30px);
-  font-weight: 600;
-  font-style: italic;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-}
-@media (min-width: 900px) {
-  .story { padding: 40px 48px 36px; margin: 46px 0 60px; }
-  .story::before { left: 104px; }
-  .story__beats li { grid-template-columns: 64px 1fr; gap: 0 34px; }
-  .story__txt { font-size: 19px; }
+.rola__item { display: grid; justify-items: center; text-align: center; gap: 4px; min-width: 0; }
+.rola__item:nth-child(even) .sketch { transform: rotate(3deg); }
+.rola__item:nth-child(odd) .sketch { transform: rotate(-2deg); }
+.rola__t { font-size: 20px; line-height: 1.05; }
+.sketch { width: 100%; max-width: 150px; height: auto; overflow: visible; }
+.sketch__fill .f1 { fill: var(--accent); opacity: 0.55; }
+.sketch__fill .f2 { fill: var(--gold); opacity: 0.75; }
+.sketch__fill .f3 { fill: var(--coral); opacity: 0.75; }
+.sketch__ink > * { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+@media (min-width: 700px) {
+  .rola__list { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+  .rola__t { font-size: 23px; }
 }
