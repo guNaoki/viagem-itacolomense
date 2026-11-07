@@ -102,3 +102,18 @@ src/
 ```
 
 Mais detalhes técnicos (decisões, armadilhas, como testar) estão no [CLAUDE.md](CLAUDE.md).
+
+## Votação (Google Sheets)
+
+Enquanto `TRIP.voteUrl` (em `src/data/trip.js`) estiver vazio, a votação roda em **modo prévia**: aparecem votos
+de "Exemplo" e o teu voto fica só no teu aparelho. Pra ligar de verdade:
+
+1. Cria uma planilha no Google Sheets.
+2. Na planilha: **Extensões > Apps Script**. Apaga o que tiver lá e cola o conteúdo de `scripts/votacao.gs`.
+3. **Implantar > Nova implantação**, tipo **App da Web**. Executar como: **Eu**. Quem pode acessar: **Qualquer pessoa**.
+   Autoriza quando o Google pedir.
+4. Copia o endereço que termina em `/exec` e cola em `voteUrl` no `src/data/trip.js`. Faz o commit.
+
+A aba "votos" é criada sozinha, com uma linha por pessoa (votar de novo troca a linha). Dá pra corrigir ou apagar
+voto direto na planilha. Se mudar o código do script: **Implantar > Gerenciar implantações > editar > Nova versão**
+(assim o endereço continua o mesmo).

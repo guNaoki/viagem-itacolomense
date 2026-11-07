@@ -52,6 +52,12 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   muda tamanho/número). A conta usa o valor **mais alto** de cada item; a frase do topo diz quanto sobra (e por pessoa).
   Se faltar dinheiro, mostra o limite tracejado e o texto em laranja.
 
+- **Votação** (`Votacao.jsx` dentro do `Outro`, `src/lib/votes.js`): contador "quem vai" (meta 12, mínimo 9, teto 15),
+  cédula (nome, se vai, topo/pode ser/não curto pra cada vibe) e placar (topo 1, pode ser ½). Dados numa planilha do
+  Google via Apps Script (`scripts/votacao.gs`, passo a passo no README): POST em `text/plain` (sem checagem de CORS),
+  `LockService` no script, leitura a cada 12 s só com aba visível e seção por perto. Sem `TRIP.voteUrl` = modo prévia
+  (votos de exemplo no `localStorage`). Sem login: a pessoa digita o nome; o nome normalizado é a chave.
+
 - **Tela de carregamento**: HTML+CSS inline no `index.html` (`#loader`, aparece antes do JS). `main.jsx` cria
   `window.__appReady` (fontes + `load`, mínimo 650 ms, teto 4 s) e remove o loader; a entrada do Hero espera essa promessa.
 

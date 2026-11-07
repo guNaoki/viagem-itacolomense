@@ -13,6 +13,9 @@ export const TRIP = {
   countdownTarget: '2027-01-01T00:00:00-03:00',
   countdownLabel: 'pra janeiro chegar',
   people: { min: 9, base: 12, max: 15, scenarios: [9, 12, 15] },
+  // Votação: endereço do web app do Google Apps Script (ver scripts/votacao.gs).
+  // Vazio = modo prévia (votos de exemplo, guardados só no aparelho).
+  voteUrl: '',
   price: 300,
   // uma pessoa entra com R$ 600 (não aparece no site, só entra na conta do caixa)
   extraPrice: 600,
