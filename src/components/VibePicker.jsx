@@ -5,6 +5,7 @@ import { gsap, useGSAP, reduceMotion, drawIn } from '../lib/gsap'
 import { useReveal } from '../lib/useReveal'
 import Mural from './Mural'
 import Sketch from './Sketch'
+import { Unique, AntesDepois } from './Romance'
 import Icon from './Icons'
 import { srcSetOf } from '../lib/img'
 import './VibePicker.css'
@@ -29,6 +30,13 @@ function Detail({ v }) {
       gsap.from('.rola__item', { y: 30, autoAlpha: 0, stagger: 0.1, duration: 0.8, scrollTrigger: st })
       gsap.from('.sketch__fill > *', { scale: 0.6, autoAlpha: 0, transformOrigin: '50% 50%', stagger: 0.05, duration: 0.9, delay: 0.3, ease: 'back.out(1.6)', scrollTrigger: st })
       drawIn('.sketch__ink > *', { duration: 1.3, stagger: 0.025, scrollTrigger: st })
+      // detalhe único e antes/depois: o texto sobe, as polaroids caem girando, o desenho se traça
+      gsap.utils.toArray('.uq, .ad').forEach((el) => {
+        const t = { trigger: el, start: 'top 78%', once: true }
+        gsap.from(el.querySelectorAll('.uq__copy > *, .ad__kicker, .ad__title'), { y: 30, autoAlpha: 0, stagger: 0.08, duration: 0.9, scrollTrigger: t })
+        gsap.from(el.querySelectorAll('.polaroid'), { y: 70, rotate: (i) => (i % 2 ? 12 : -12), autoAlpha: 0, stagger: 0.18, duration: 1.1, delay: 0.2, ease: 'back.out(1.4)', scrollTrigger: t })
+      })
+      drawIn('.fogao__ink > *, .ad__arrow path', { duration: 1.4, stagger: 0.04, scrollTrigger: { trigger: '.uq', start: 'top 75%', once: true } })
     },
     { scope: ref },
   )
@@ -55,6 +63,8 @@ function Detail({ v }) {
         </ul>
       </div>
 
+      {v.unique && <Unique u={v.unique} />}
+
       <div className="vd__grid">
         <p className="vd__pitch vd__reveal">{v.pitch}</p>
 
@@ -68,6 +78,8 @@ function Detail({ v }) {
         </div>
       </div>
 
+
+      {v.story && <AntesDepois s={v.story} />}
     </div>
   )
 }

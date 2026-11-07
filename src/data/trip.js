@@ -74,6 +74,20 @@ export const VIBES = {
       { t: 'churrasco no fogão a lenha', art: 'churrasco' },
     ],
     stay: 'Cabe até 15 com folga: 3 quartos, 8 camas + colchões extras e 3 banheiros.',
+    // o detalhe que só ela tem (desenho do fogão aceso + foto)
+    unique: {
+      kicker: 'só a chácara tem',
+      title: 'Fogão a lenha de verdade',
+      text: 'A panela fica no fogo enquanto a galera conversa em volta, o cheiro de lenha toma a casa e de manhã o café sai dali mesmo.',
+      photo: { src: '/img/chacara-3.webp', note: 'ele mesmo, esperando a gente' },
+    },
+    // "antes e depois": foto antiga da galera (src/assets/antes/) ao lado do lugar vazio
+    story: {
+      kicker: 'a gente já tem história',
+      title: 'Falta escrever esse capítulo',
+      before: 'foto antiga da galera',
+      after: { src: '/img/chacara-1.webp', note: 'a próxima foto é aqui' },
+    },
     link: 'https://www.airbnb.com.br/rooms/804996807567433942',
     linkLabel: 'Ver o anúncio no Airbnb',
     photos: [

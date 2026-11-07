@@ -38,3 +38,17 @@ Object.keys(srcs)
     const [, folder, file] = m
     ;(FOLDER_PHOTOS[folder] ||= []).push({ src: srcs[path], srcSet: srcsets[path], note: caption(file) })
   })
+
+/* ------------------------------------------------------------------
+   FOTOS ANTIGAS DA GALERA ("antes e depois" da Chácara)
+   Joga em src/assets/antes/ — a primeira (em ordem de nome) vira o "antes".
+   Legenda pelo nome do arquivo: "01-a-gente-em-2019.jpg" -> "a gente em 2019"
+------------------------------------------------------------------- */
+const antes = import.meta.glob('../assets/antes/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', {
+  eager: true,
+  query: '?w=900&format=webp&quality=80',
+  import: 'default',
+})
+export const ANTES_PHOTOS = Object.keys(antes)
+  .sort()
+  .map((path) => ({ src: antes[path], note: caption(path.split('/').pop()) }))
