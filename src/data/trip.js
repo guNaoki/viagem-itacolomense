@@ -79,6 +79,7 @@ export const VIBES = {
       { t: 'futsabão inflável', art: 'futsabao' },
       { t: 'sinuca', art: 'sinuca' },
       { t: 'churrasco no fogão a lenha', art: 'churrasco' },
+      { t: 'ping-pong', art: 'pingpong' },
     ],
     stay: 'Cabe até 15 com folga: 3 quartos, 8 camas + colchões extras e 3 banheiros.',
     // o detalhe que só ela tem (desenho do fogão aceso + foto)
