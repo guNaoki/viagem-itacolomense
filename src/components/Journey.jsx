@@ -181,7 +181,7 @@ function Trip({ steps, v, setMode }) {
 
       <ol className="trip__list">
         {steps.map((s, i) => (
-          <li key={i} className={`chap chap--${i % 2 ? 'r' : 'l'} ${i === active ? 'is-now' : ''}`}>
+          <li key={i} className={`chap chap--${i % 2 ? 'r' : 'l'} ${i === active ? 'is-now' : ''} ${s.photo === false ? 'chap--solo' : ''}`}>
             <span className="chap__big display" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <div className="chap__copy">
               <p className="chap__count hand" data-rise>
@@ -203,9 +203,12 @@ function Trip({ steps, v, setMode }) {
                 </ul>
               )}
             </div>
-            <div className="chap__pics" data-rise>
-              <Pics photos={photos[i]} scene={s.scene} />
-            </div>
+            {/* photo: false = parada só com texto (sem foto nem espaço reservado) */}
+            {s.photo !== false && (
+              <div className="chap__pics" data-rise>
+                <Pics photos={photos[i]} scene={s.scene} />
+              </div>
+            )}
           </li>
         ))}
       </ol>

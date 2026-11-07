@@ -253,7 +253,8 @@ export const VIBES = {
       { src: '/img/ody-5.webp', note: 'quiosque do churrasco' },
     ],
     scenes: {
-      van: [],
+      // mesma foto do "Pé na estrada" (pasta jornada/estrada), com outra legenda
+      van: (FOLDER_PHOTOS.estrada || []).slice(0, 1).map((p) => ({ ...p, note: 'van lotada e ninguém acordou direito' })),
       ody: [
         { src: '/img/ody-2.webp', note: 'a Tsunami: 3 metros' },
         { src: '/img/ody-8.webp', note: 'toboáguas' },
@@ -261,7 +262,6 @@ export const VIBES = {
         { src: '/img/ody-4.webp', note: 'rio lento' },
         { src: '/img/ody-5.webp', note: 'nosso quiosque' },
       ],
-      volta: [],
     },
     sky: { accent: [0.05, 0.6, 0.86], accent2: [0.98, 0.57, 0.24], shape: [0, 0, 1], fire: 0 },
     itineraries: ['r3'],
@@ -328,8 +328,8 @@ export const ITINERARIES = {
     steps: () => [
       { short: 'Itacolomi', when: 'sáb 30/01', title: 'Todo mundo em Itacolomi', text: 'Reunidos com a família em Novo Itacolomi.', icon: 'home', scene: 'itacolomi', time: 'day' },
       { short: 'Van', when: 'dom 31/01 · 07h', title: 'Saída da van', text: 'A nossa van sai de Novo Itacolomi rumo a Iguaraçu. 95 km, 1h25.', icon: 'van', scene: 'van', time: 'day' },
-      { short: 'Ody Park', when: 'domingo · 09h às 18h', title: 'Dia inteiro no Ody Park', text: 'Piscina de ondas de 3 metros, toboágua, rio lento e quiosque de churrasco reservado.', icon: 'wave', scene: 'ody', time: 'day' },
-      { short: 'Volta', when: 'domingo · 18h30–20h', title: 'Volta pra casa', text: 'Retorno da van pra Novo Itacolomi e Apucarana, todo mundo queimado de sol.', icon: 'van', scene: 'volta', time: 'day' },
+      { short: 'Ody Park', when: 'dom 31/01 · 09h às 18h', title: 'Dia inteiro no Ody Park', text: 'Piscina de ondas de 3 metros, toboágua, rio lento e quiosque de churrasco reservado.', icon: 'wave', scene: 'ody', time: 'day' },
+      { short: 'Volta', when: 'dom 31/01 · 18h30–20h', title: 'Volta pra casa', text: 'Retorno da van pra Novo Itacolomi e Apucarana, todo mundo queimado de sol.', icon: 'van', scene: 'volta', time: 'day', photo: false },
     ],
   },
 }
