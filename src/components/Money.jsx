@@ -225,7 +225,10 @@ export default function Money() {
             </span>
             <span className="hand money__pp">por pessoa, apenas.</span>
           </div>
-          <p className="money__covers" data-rise>{TRIP.notes.covers}</p>
+          <p className="money__covers" data-rise>
+            {TRIP.notes.covers}
+            <small>{TRIP.notes.details}</small>
+          </p>
         </div>
 
         <div className="money__sim" data-rise>

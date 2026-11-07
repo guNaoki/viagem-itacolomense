@@ -101,7 +101,8 @@
   letter-spacing: -0.03em;
 }
 .cd__cell--big .cd__digits { font-size: clamp(54px, 14vw, 92px); color: var(--accent-ink); font-style: italic; }
-.cd__slot { display: inline-block; overflow: hidden; padding: 0.06em 0.04em 0; }
+/* corta só em cima/embaixo (pro número rolar); dos lados deixa o itálico sobrar sem cortar o "3" */
+.cd__slot { display: inline-block; clip-path: inset(0 -0.5em); padding: 0.06em 0.04em 0; }
 .cd__d { display: inline-block; animation: roll 0.55s var(--ease); }
 @keyframes roll { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 .cd__unit { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
@@ -123,7 +124,7 @@
 /* no computador ele boia ao lado do botão sem aumentar a altura do topo */
 @media (min-width: 900px) {
   .hero__go { position: relative; display: inline-flex; justify-self: start; }
-  .mbapeso--hero { position: absolute; left: calc(100% + 22px); top: -46px; width: 112px; margin: 0; }
+  .mbapeso--hero { position: absolute; left: calc(100% + 22px); top: -4px; width: 104px; margin: 0; }
 }
 
 /* alerta das datas: tira de papel com fita, no topo */
@@ -147,4 +148,4 @@
 .hero__alert-dot { flex: none; width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: var(--ember); animation: alert-pulse 1.6s ease-in-out infinite; }
 @keyframes alert-pulse { 50% { transform: scale(1.5); opacity: 0.5; } }
 /* no computador o Mbapeso boia ao lado do botão e desce um pouco: o aviso fica abaixo dele */
-@media (min-width: 900px) { .hero__alert { font-size: 15.5px; padding: 12px 18px; margin-top: 64px; } }
+@media (min-width: 900px) { .hero__alert { font-size: 15.5px; padding: 12px 18px; margin-top: 108px; } }

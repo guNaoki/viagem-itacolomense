@@ -15,13 +15,15 @@ export const TRIP = {
   countdownTarget: '2027-01-30T08:00:00-03:00',
   countdownLabel: 'pro dia 30 chegar',
   // alerta no topo do site
-  alert: 'As datas tão acabando: na chácara só sobrou 30/01 a 01/02. A gente já vai deixar reservado pra não perder (dá pra cancelar se a galera escolher outra), então responde logo!',
+  alert: 'As datas tão acabando: na chácara só sobrou 30/01 a 01/02. A gente já vai deixar reservado pra não perder (dá pra cancelar se a galera escolher outra). Responde até domingo, 08/11!',
   // frases que deixam explícito o que pode gerar dúvida
   notes: {
     // embaixo do "R$ 300 por pessoa"
     covers: 'É tudo: lugar, transporte, futsabão e o que sobrar vira comida e bebida. Ninguém paga nada à parte.',
+    // observação pequena embaixo do "covers"
+    details: 'Os detalhes (como e quando pagar) a gente ainda conversa no grupo.',
     // embaixo dos jeitos de ir (o transporte sai do caixa)
-    transport: 'O transporte já tá dentro dos R$ 300: sai do caixa, ninguém paga gasolina por fora.',
+    transport: 'O transporte já tá dentro dos R$ 300: gasolina, carro, ônibus ou Uber, sai tudo do caixa.',
     // na votação, embaixo do "vai?"
     confirm: '"Tô dentro" conta pros 12: quer dizer que tu vai e entra com os R$ 300. Teu nome e teu voto aparecem pra galera.',
   },
@@ -391,7 +393,7 @@ export const TRANSPORT = {
     name: 'Carona + ônibus + Uber',
     text: 'Carona até a rodoviária de Apucarana, ônibus até Londrina e Uber até o lugar.',
     price: 'R$ 30–37',
-    priceNote: 'por pessoa no ônibus + ~R$ 45 por carro no Uber',
+    priceNote: 'por pessoa no ônibus + ~R$ 45 por carro no Uber (sai do caixa)',
   },
   van: {
     icon: 'van',
