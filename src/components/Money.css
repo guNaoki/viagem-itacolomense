@@ -46,7 +46,10 @@
 .seg--host { background: var(--accent); }
 .seg--trans { background: var(--ink-2); }
 .seg--fun { background: var(--coral); }
-.seg--rest { background: repeating-linear-gradient(-45deg, var(--gold) 0 7px, color-mix(in srgb, var(--gold) 70%, var(--paper)) 7px 12px); }
+.seg--rest { background: var(--gold); }
+/* hachura: diferença de preço que ainda pode virar sobra */
+.seg--range { background: repeating-linear-gradient(-45deg, var(--gold) 0 5px, var(--accent) 5px 10px); }
+.dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; vertical-align: -2px; margin-right: 4px; }
 .bar__limit { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 3px dashed var(--ink); transition: left 0.8s var(--ease); }
 
 .lbl { position: absolute; left: 0; right: 0; height: 50px; pointer-events: none; }

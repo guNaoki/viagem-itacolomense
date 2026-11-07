@@ -49,18 +49,35 @@ function Bar({ budget, total, n, compact, name }) {
   const restBest = total - sumMin
   const scale = Math.max(total, sumMax) // se faltar dinheiro, a barra passa do caixa
 
+  // pedaços da barra: cada gasto no valor mínimo; a diferença (preço que ainda pode variar) fica
+  // listrada logo antes da sobra — se a hospedagem vier mais barata, essa parte vira sobra
+  const spread = sumMax - sumMin
+  const bars = [
+    ...items.map((it) => ({ key: it.key, w: it.min })),
+    { key: 'range', w: spread },
+    { key: 'rest', w: Math.max(0, rest) },
+  ].filter((b) => b.w > 0)
+  let acc = 0
+  const at = {}
+  bars.forEach((b) => {
+    at[b.key] = [acc, acc + b.w]
+    acc += b.w
+  })
+  // etiquetas: uma por gasto + a sobra (que cobre a parte listrada e a sobra garantida)
   const segs = items.map((it) => ({
     key: it.key,
-    w: it.max,
+    c: (at[it.key][0] + it.min / 2) / scale,
     name: it.label.charAt(0).toLowerCase() + it.label.slice(1),
-    val: it.min === it.max ? brl(it.max) : `até ${brl(it.max)}`,
+    val: it.min === it.max ? brl(it.max) : range(it.min, it.max),
   }))
-  if (rest > 0) segs.push({ key: 'rest', w: rest, name: 'sobra', val: brl(rest) })
-  let acc = 0
-  segs.forEach((sg) => {
-    sg.c = (acc + sg.w / 2) / scale // centro do pedaço (0–1)
-    acc += sg.w
-  })
+  if (restBest > 0) {
+    segs.push({
+      key: 'rest',
+      c: (sumMin + restBest / 2) / scale, // meio do trecho entre os gastos mínimos e o fim do caixa
+      name: 'sobra',
+      val: rest > 0 && spread ? range(rest, restBest) : rest > 0 ? brl(rest) : `até ${brl(restBest)}`,
+    })
+  }
 
   const chart = useRef(null)
   const lbls = useRef([])
@@ -71,7 +88,7 @@ function Bar({ budget, total, n, compact, name }) {
     ro.observe(chart.current)
     return () => ro.disconnect()
   }, [])
-  const sig = segs.map((sg) => sg.key + sg.w).join() + W
+  const sig = segs.map((sg) => sg.key + sg.c + sg.val).join() + W
   useLayoutEffect(() => {
     if (!W) return
     // faixas: em cima, embaixo e, se precisar, uma segunda linha mais afastada de cada lado
@@ -96,20 +113,20 @@ function Bar({ budget, total, n, compact, name }) {
   if (rest >= 0)
     head = (
       <>
-        sobra <b>{brl(rest)}</b> pra {budget.restLabel}
-        <small> (~{brl(rest / n)} por pessoa)</small>
+        sobra <b>{spread ? range(rest, restBest) : brl(rest)}</b> pra {budget.restLabel}
+        <small> (~{spread ? `${brl(rest / n)} a ${Math.round(restBest / n)}` : brl(rest / n)} por pessoa)</small>
       </>
     )
   else if (restBest >= 0)
     head = (
       <>
-        pode faltar <b className="is-short">{brl(-rest)}</b> se a hospedagem vier no valor mais alto
+        sobra até <b>{brl(restBest)}</b>, mas pode faltar <b className="is-short">{brl(-rest)}</b> se a hospedagem vier no valor mais alto
       </>
     )
   else
     head = (
       <>
-        falta <b className="is-short">{brl(-rest)}</b> pra fechar a conta
+        falta <b className="is-short">{spread ? range(-restBest, -rest) : brl(-rest)}</b> pra fechar a conta
       </>
     )
 
@@ -124,8 +141,8 @@ function Bar({ budget, total, n, compact, name }) {
         ref={chart}
       >
         <div className="bar__track">
-          {segs.map((sg) => (
-            <span key={sg.key} className={`seg seg--${sg.key}`} style={{ width: `${(sg.w / scale) * 100}%` }} />
+          {bars.map((b) => (
+            <span key={b.key} className={`seg seg--${b.key}`} style={{ width: `${(b.w / scale) * 100}%` }} />
           ))}
           {sumMax > total && <span className="bar__limit" style={{ left: `${(total / scale) * 100}%` }} title="até aqui é o caixa" />}
         </div>
@@ -144,7 +161,7 @@ function Bar({ budget, total, n, compact, name }) {
       </div>
       {ranged.length > 0 && (
         <p className="bar__fine">
-          {ranged.map((it) => `${it.label.toLowerCase()} sai entre ${brl(it.min)} e ${brl(it.max)}`).join('; ')}: a conta usa o valor mais alto, então se vier mais barato sobra mais.
+          <i className="dot seg--range" /> a parte listrada é a diferença no preço {ranged.length > 1 ? 'desses itens' : `da ${ranged[0].label.toLowerCase()}`} ({ranged.map((it) => range(it.min, it.max)).join(', ')}): se vier mais barato, vira sobra.
         </p>
       )}
     </div>
