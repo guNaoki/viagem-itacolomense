@@ -1,18 +1,20 @@
-import { useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useTrip } from '../lib/trip-context'
-import { scrollToEl } from '../lib/scroll'
 import { gsap, SplitText, useGSAP, reduceMotion, drawIn } from '../lib/gsap'
 import { useFitText } from '../lib/useFitText'
 import { TRIP } from '../data/trip'
 import Countdown from './Countdown'
 import Doodle from './Doodle'
 import Icon from './Icons'
+import ConfirmVote from './ConfirmVote'
 import './Hero.css'
 
 export default function Hero() {
   const { v } = useTrip()
   const scope = useRef(null)
   const jan = useRef(null)
+  const [asking, setAsking] = useState(false)
+  const closeAsk = useCallback(() => setAsking(false), [])
   useFitText(jan, { max: 330, ratio: 0.97 })
 
   // entrada cinematográfica (espera as fontes pra cortar as letras no lugar certo)
@@ -90,10 +92,11 @@ export default function Hero() {
           </div>
           <div className="hero__col hero__col--right">
             <Countdown />
-            <button type="button" className="btn hero__cta" onClick={() => scrollToEl('#vibe', { offset: -60 })}>
-              Explorar os destinos e roteiros
+            <button type="button" className="btn hero__cta" onClick={() => setAsking(true)}>
+              Bora votar
               <span className="btn__dot"><Icon name="arrowDown" size={20} /></span>
             </button>
+            {asking && <ConfirmVote onClose={closeAsk} />}
           </div>
         </div>
       </div>
