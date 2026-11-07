@@ -16,6 +16,11 @@ export default function Outro() {
   return (
     <section className="sec outro" ref={scope}>
       <div className="wrap">
+        {/* o mascote do grupo do zap, boiando no fundo */}
+        <figure className="mbapeso" aria-hidden="true">
+          <img src="/img/mbapeso.webp" alt="" loading="lazy" decoding="async" width="640" height="640" />
+          <figcaption className="hand">Kylian Mbapeso aprova</figcaption>
+        </figure>
         <p className="eyebrow">e aí?</p>
         <h2 className="display outro__title">
           <span data-split>Bora?</span>

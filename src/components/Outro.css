@@ -56,3 +56,23 @@
   text-transform: uppercase;
   color: var(--ink-2);
 }
+
+/* Kylian Mbapeso (avatar do grupo do zap) boiando atrás do "Bora?" */
+.outro .wrap { isolation: isolate; }
+.mbapeso {
+  position: absolute;
+  z-index: -1;
+  top: -78px;
+  right: -4px;
+  width: 112px;
+  margin: 0;
+  pointer-events: none;
+  animation: boia 7s ease-in-out infinite;
+}
+.mbapeso img { width: 100%; height: auto; border-radius: 50%; box-shadow: 0 0 0 6px #fffdf7, 0 18px 40px -14px rgba(60, 30, 5, 0.55); }
+.mbapeso figcaption { margin-top: 12px; text-align: center; font-size: clamp(18px, 3.4vw, 26px); color: var(--accent-ink); transform: rotate(-4deg); }
+@keyframes boia {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-18px) rotate(5deg); }
+}
+@media (min-width: 900px) { .mbapeso { top: -70px; right: 0; width: 210px; } }
