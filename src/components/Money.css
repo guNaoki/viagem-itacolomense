@@ -75,6 +75,7 @@
 .lbl--down .lbl__tick { top: 0; }
 .lbl--up2 .lbl__tick { bottom: 0; height: 56px; opacity: 0.5; }
 .lbl--down2 .lbl__tick { top: 0; height: 56px; opacity: 0.5; }
+.bar__fine.bar__cut { color: var(--ember); font-weight: 600; }
 .bar__fine { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); max-width: 40em; }
 .bar__name { margin: 0 0 4px; font-weight: 700; font-size: 15px; }
 .bar--compact .bar__head { font-size: 17px; }

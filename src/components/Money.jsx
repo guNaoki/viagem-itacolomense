@@ -28,8 +28,10 @@ function Tally({ n }) {
 }
 
 // Itens do orçamento resolvidos pra N pessoas (ingresso por pessoa acompanha o N).
+// itens com minPeople saem da conta quando tem menos gente que isso (ex.: futsabão na chácara com 9)
+const cutItems = (budget, n) => budget.items.filter((it) => it.minPeople && n < it.minPeople)
 const resolve = (budget, n) =>
-  budget.items.map((it) =>
+  budget.items.filter((it) => !(it.minPeople && n < it.minPeople)).map((it) =>
     it.perPerson
       ? { ...it, label: `${it.label} (${n} × ${brl(it.perPerson)})`, min: n * it.perPerson, max: n * it.perPerson }
       : it,
@@ -158,6 +160,9 @@ function Bar({ budget, total, n, compact, name }) {
           )
         })}
       </div>
+      {cutItems(budget, n).map((it) => (
+        <p key={it.key} className="bar__fine bar__cut">{it.cutNote.replace('{n}', n)}</p>
+      ))}
       {ranged.length > 0 && (
         <p className="bar__fine">
           <i className="dot seg--range" /> a parte listrada é a diferença no preço {ranged.length > 1 ? 'desses itens' : `da ${ranged[0].label.toLowerCase()}`} ({ranged.map((it) => range(it.min, it.max)).join(', ')}): se vier mais barato, vira sobra.

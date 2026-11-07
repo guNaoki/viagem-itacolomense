@@ -59,7 +59,8 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 - **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam. A barra não tem legenda: cada pedaço
   tem nome e valor escritos em cima/embaixo (faixas `up`/`down`/`up2`/`down2`, distribuídas medindo as etiquetas só quando
   muda tamanho/número). A conta usa o valor **mais alto** de cada item; a frase do topo diz quanto sobra (e por pessoa).
-  Se faltar dinheiro, mostra o limite tracejado e o texto em laranja.
+  Se faltar dinheiro, mostra o limite tracejado e o texto em laranja. Item com `minPeople` sai da conta abaixo desse número
+  (futsabão da chácara só com 12+; com 9 aparece o aviso `cutNote`).
 
 - **Votação** (`Votacao.jsx` dentro do `Outro`, `src/lib/votes.js`): contador "quem vai" (meta 12, mínimo 9, teto 15; "talvez" soma no total e aparece hachurado),
   cédula (nome, se vai, topo/pode ser/não curto pra cada vibe) e placar (topo 1, pode ser ½). Dados numa planilha do

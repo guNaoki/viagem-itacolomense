@@ -142,7 +142,8 @@ export const VIBES = {
       items: [
         { key: 'host', label: 'Hospedagem', min: 2330, max: 2330 },
         { key: 'trans', label: 'Transporte', min: 400, max: 400 },
-        { key: 'fun', label: 'Futsabão', min: 450, max: 450 },
+        // com menos de 12 o dinheiro não fecha com o futsabão: ele sai da conta
+        { key: 'fun', label: 'Futsabão', min: 450, max: 450, minPeople: 12, cutNote: 'Com {n} pessoas não dá pra ter o futsabão na chácara: o dinheiro não fecha. Ele sai da conta e a sobra já tá sem ele.' },
       ],
       restLabel: 'comida e bebida',
     },
