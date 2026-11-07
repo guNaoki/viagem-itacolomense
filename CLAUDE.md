@@ -50,7 +50,8 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   ligados só com o desenho na tela via IntersectionObserver — + polaroid); `story` = "antes e depois" nas 3 vibes (foto
   antiga da galera em `src/assets/antes/`, via `ANTES_PHOTOS` em `photos.js`, ao lado do lugar vazio "a próxima foto é
   aqui"). Sem foto antiga, mostra um espaço reservado.
-- **"Por que não só o Ody Park?"** (`WHY` no `trip.js`, acima dos cartões das vibes): linha à mão + `<details>` com os motivos.
+- **"Por que não só o Ody Park?"**: rascunho (linha + botão com motivos acima das vibes) guardado na branch
+  `claude/por-que-chacara`, fora da `main` até o dono revisar.
 - **Kylian Mbapeso** (`Mbapeso.jsx`, `/img/mbapeso.webp`): avatar/meme do grupo do zap, figurinha redonda boiando
   (CSS `@keyframes boia` em `base.css`) ao lado do botão do Hero e acima do "Bora?". Não pode cobrir texto.
 - **Rota** (`RouteSection.jsx`): mesmo esquema — `.route__pin` sticky dentro de `.route__track` + `.route__runway`,

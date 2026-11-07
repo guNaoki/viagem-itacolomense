@@ -51,20 +51,6 @@ export const PLACEHOLDERS = {
   volta: 'foto da volta',
 }
 
-/* "Por que chácara e cabanas?" (acima das vibes): no começo a ideia era só o Ody Park. Rascunho pra revisar. */
-export const WHY = {
-  line: 'No começo a ideia era só o Ody Park. Aí apareceram a chácara e as cabanas, e elas mudam o jogo.',
-  button: 'por que não só o Ody Park?',
-  reasons: [
-    ['Um fim de semana inteiro, não um dia', 'No Ody é bate-volta de domingo. Na chácara ou nas cabanas a gente dorme lá, acorda junto e o rolê não acaba às 18h.'],
-    ['Quase o mesmo dinheiro', 'Ingressos + van + quiosque do Ody dão por volta de R$ 3.300 pra 12 pessoas, por um dia. A chácara sai entre R$ 3.100 e 3.500 com transporte e futsabão, por duas noites.'],
-    ['O lugar é só nosso', 'Sem fila, sem multidão, sem horário pra ir embora. Música nossa, comida nossa, regra nossa.'],
-    ['A noite é a melhor parte', 'Sarau, fogueira, violão, filme no telão, conversa até tarde. Parque aquático fecha antes disso tudo começar.'],
-    ['Pertinho de Itacolomi', 'Uns 75 km, 1h15 de estrada. Dá pra ver a família no mesmo fim de semana.'],
-  ],
-  end: 'O Ody Park continua na mesa: se a galera preferir, é só votar nele.',
-}
-
 export const VIBE_ORDER = ['chacara', 'cabanas', 'ody']
 
 export const VIBES = {
