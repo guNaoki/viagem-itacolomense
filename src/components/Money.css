@@ -2,6 +2,7 @@
 .money__big { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 26px; }
 .money__300 { position: relative; font-size: clamp(76px, 20vw, 190px); font-weight: 900; letter-spacing: -0.05em; line-height: 0.9; padding: 0 0.08em; }
 .money__300 .doodle { left: -8%; top: -16%; width: 116%; height: 136%; color: var(--accent); }
+.money__covers { margin: 0; max-width: 32em; font-size: 17px; color: var(--ink-2); }
 .money__pp { font-size: clamp(30px, 6vw, 44px); transform: rotate(-4deg); }
 
 .money__sim { margin-top: 64px; display: grid; gap: 18px; justify-items: start; }

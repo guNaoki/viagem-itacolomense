@@ -93,3 +93,6 @@
   .tickets--solo { grid-template-columns: minmax(0, 520px); }
   .ticket { flex: none; }
 }
+
+/* lembrete: transporte sai do caixa */
+.route__note { margin: 18px 0 0; font-size: 23px; line-height: 1.15; color: var(--accent-ink); max-width: 26em; transform: rotate(-1deg); }

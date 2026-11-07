@@ -74,7 +74,7 @@ function Bar({ budget, total, n, compact, name }) {
     segs.push({
       key: 'rest',
       c: (sumMin + restBest / 2) / scale, // meio do trecho entre os gastos mínimos e o fim do caixa
-      name: 'sobra',
+      name: `${budget.restLabel} (sobra)`,
       val: rest > 0 && spread ? range(rest, restBest) : rest > 0 ? brl(rest) : `até ${brl(restBest)}`,
     })
   }
@@ -113,8 +113,7 @@ function Bar({ budget, total, n, compact, name }) {
   if (rest >= 0)
     head = (
       <>
-        sobra <b>{spread ? range(rest, restBest) : brl(rest)}</b> pra {budget.restLabel}
-        <small> (~{spread ? `${brl(rest / n)} a ${Math.round(restBest / n)}` : brl(rest / n)} por pessoa)</small>
+        {budget.restLabel} (sobra): <b>{spread ? range(rest, restBest) : brl(rest)}</b>
       </>
     )
   else if (restBest >= 0)
@@ -226,6 +225,7 @@ export default function Money() {
             </span>
             <span className="hand money__pp">por pessoa, apenas.</span>
           </div>
+          <p className="money__covers" data-rise>{TRIP.notes.covers}</p>
         </div>
 
         <div className="money__sim" data-rise>
@@ -262,7 +262,7 @@ export default function Money() {
               ))}
             </div>
           </details>
-          <p className="money__neutral">Hospedagem, transporte e diversão têm preço fechado; o que muda com o número de gente é quanto sobra pra mesa. Troca ali em cima entre 9, 12 e 15 pra ver.</p>
+          <p className="money__neutral">Os gastos já estão contados; o que muda com o número de gente é quanto sobra pra comida e bebida. Troca ali em cima entre 9, 12 e 15 pra ver.</p>
         </div>
       </div>
     </section>

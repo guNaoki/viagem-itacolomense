@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTrip } from '../lib/trip-context'
-import { ROUTES, TRANSPORT } from '../data/trip'
+import { ROUTES, TRANSPORT, TRIP } from '../data/trip'
 import { useReveal } from '../lib/useReveal'
 import { gsap, ScrollTrigger, useGSAP, reduceMotion } from '../lib/gsap'
 import Icon from './Icons'
@@ -204,6 +204,7 @@ export default function RouteSection() {
             <Ticket key={id} t={TRANSPORT[id]} i={i} solo={solo} />
           ))}
         </div>
+        <p className="route__note hand">{TRIP.notes.transport}</p>
       </div>
     </section>
   )

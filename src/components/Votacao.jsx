@@ -105,6 +105,7 @@ function Cedula({ myName, mine, vote }) {
             </button>
           ))}
         </div>
+        <p className="ced__hint">{TRIP.notes.confirm}</p>
       </fieldset>
 
       <fieldset className="ced__row">
