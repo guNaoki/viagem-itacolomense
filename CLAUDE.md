@@ -67,6 +67,11 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   `LockService` no script, leitura a cada 12 s só com aba visível e seção por perto. Ligada na planilha do dono (`TRIP.voteUrl`). Sem `voteUrl` = modo prévia
   (votos de exemplo no `localStorage`). Sem login: a pessoa digita o nome; o nome normalizado é a chave.
 
+- **Data e alerta**: a viagem é sáb 30/01 a seg 01/02/2027 (`TRIP.dates`, contagem em `countdownTarget`); `TRIP.alert`
+  aparece numa tira amarela no topo do Hero ("as datas tão acabando..."). Chácara fechou em R$ 2.330.
+- **Foto única na jornada**: se for deitada (paisagem), a polaroid fica larga e sem corte (`.chap__one.is-wide`, decidido
+  no `onLoad` da imagem).
+
 - **Tela de carregamento**: HTML+CSS inline no `index.html` (`#loader`, aparece antes do JS). `main.jsx` cria
   `window.__appReady` (fontes + `load`, mínimo 650 ms, teto 4 s) e remove o loader; a entrada do Hero espera essa promessa.
 

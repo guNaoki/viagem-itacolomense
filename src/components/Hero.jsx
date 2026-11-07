@@ -68,6 +68,11 @@ export default function Hero() {
   return (
     <section className="hero" id="topo" ref={scope}>
       <div className="wrap hero__wrap">
+        {/* alerta: datas acabando */}
+        <p className="hero__alert" role="note">
+          <span className="hero__alert-dot" aria-hidden="true" />
+          {TRIP.alert}
+        </p>
         <h1 className="hero__title">
           <span className="hero__kicker hand">a galera convoca:</span>
           <span className="hero__fit">
@@ -87,7 +92,7 @@ export default function Hero() {
             <p className="lede hero__lede hero__swap" key={'s' + v.id}>{v.heroSub}</p>
             <ul className="hero__notes">
               <li><Doodle type="star" stroke={2.2} draw={false} /> {TRIP.people.min} a {TRIP.people.max} amigos</li>
-              <li><Doodle type="star" stroke={2.2} draw={false} /> janeiro de 2027</li>
+              <li><Doodle type="star" stroke={2.2} draw={false} /> {TRIP.dates} de 2027</li>
               <li className="hero__swap" key={'l' + v.id}><Doodle type="star" stroke={2.2} draw={false} /> {v.heroLine}</li>
             </ul>
           </div>

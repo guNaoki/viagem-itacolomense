@@ -17,6 +17,12 @@ import './Journey.css'
    - o céu vira noite na parada do sarau e volta a ser dia de manhã
 */
 
+// foto deitada (paisagem) ganha a polaroid larga, sem cortar
+const wide = (fig) => {
+  const img = fig?.querySelector('img')
+  if (img?.naturalWidth > img?.naturalHeight) fig.classList.add('is-wide')
+}
+
 function Pics({ photos, scene }) {
   if (!photos.length) {
     return (
@@ -33,10 +39,18 @@ function Pics({ photos, scene }) {
   if (photos.length === 1) {
     const p = photos[0]
     return (
-      <figure className="polaroid chap__one" data-pop>
+      <figure className="polaroid chap__one" data-pop ref={(el) => el && el.querySelector('img')?.complete && wide(el)}>
         <span className="tape" style={{ top: -12, left: '50%', transform: 'translateX(-50%) rotate(-3deg)' }} />
         <div className="chap__img">
-          <img src={p.src} srcSet={p.srcSet} sizes="(min-width: 900px) 420px, 78vw" alt={p.note} loading="lazy" decoding="async" />
+          <img
+            src={p.src}
+            srcSet={p.srcSet}
+            sizes="(min-width: 900px) 640px, 92vw"
+            alt={p.note}
+            loading="lazy"
+            decoding="async"
+            onLoad={(e) => wide(e.currentTarget.closest('figure'))}
+          />
         </div>
         <figcaption>{p.note}</figcaption>
       </figure>

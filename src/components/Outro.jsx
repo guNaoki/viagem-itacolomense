@@ -3,6 +3,7 @@ import { useTrip } from '../lib/trip-context'
 import { useReveal } from '../lib/useReveal'
 import Votacao from './Votacao'
 import Mbapeso from './Mbapeso'
+import { TRIP } from '../data/trip'
 import Doodle from './Doodle'
 import './Outro.css'
 
@@ -24,7 +25,7 @@ export default function Outro() {
         <Votacao />
       </div>
       <footer className="outro__foot">
-        <span>janeiro · 2027</span>
+        <span>{TRIP.dates} · 2027</span>
         <span>Novo Itacolomi → {v.short}</span>
       </footer>
     </section>

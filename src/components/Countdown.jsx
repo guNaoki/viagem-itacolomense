@@ -27,7 +27,7 @@ export default function Countdown() {
   if (diff === 0) {
     return (
       <div className="cd cd--done">
-        <p className="display">chegou janeiro.</p>
+        <p className="display">chegou o dia.</p>
       </div>
     )
   }

@@ -125,3 +125,25 @@
   .hero__go { position: relative; display: inline-flex; justify-self: start; }
   .mbapeso--hero { position: absolute; left: calc(100% + 22px); top: -46px; width: 112px; margin: 0; }
 }
+
+/* alerta das datas: tira de papel com fita, no topo */
+.hero__alert {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 560px;
+  margin: 0 0 22px;
+  padding: 10px 14px;
+  background: #fff3c4;
+  color: #1c1917;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  box-shadow: 0 8px 18px -12px rgba(120, 60, 10, 0.5);
+  transform: rotate(-1deg);
+}
+.hero__alert-dot { flex: none; width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: var(--ember); animation: alert-pulse 1.6s ease-in-out infinite; }
+@keyframes alert-pulse { 50% { transform: scale(1.5); opacity: 0.5; } }
+@media (min-width: 900px) { .hero__alert { font-size: 15.5px; padding: 12px 18px; } }

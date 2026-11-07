@@ -111,6 +111,10 @@
 .chap--r .chap__one { transform: rotate(2.2deg); justify-self: end; }
 .chap__img { aspect-ratio: 4 / 5; overflow: hidden; }
 .chap__img img { width: 100%; height: 100%; object-fit: cover; }
+/* foto deitada: aparece inteira, sem cortar */
+.chap__one.is-wide { width: min(100%, 640px); }
+.chap__one.is-wide .chap__img { aspect-ratio: auto; }
+.chap__one.is-wide .chap__img img { height: auto; }
 .chap__mural { padding-top: 14px; max-width: 620px; }
 .chap--r .chap__mural { margin-left: auto; }
 

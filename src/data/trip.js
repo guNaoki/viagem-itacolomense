@@ -10,8 +10,12 @@ import { withSrcSet } from '../lib/img'
 
 export const TRIP = {
   // Contagem regressiva: até quando? (fuso de Brasília)
-  countdownTarget: '2027-01-01T00:00:00-03:00',
-  countdownLabel: 'pra janeiro chegar',
+  // data da viagem: sábado 30/01 a segunda 01/02 (a única data livre da chácara)
+  dates: '30/01 a 01/02',
+  countdownTarget: '2027-01-30T08:00:00-03:00',
+  countdownLabel: 'pro dia 30 chegar',
+  // alerta no topo do site
+  alert: 'As datas tão acabando: na chácara só sobrou 30/01 a 01/02. A gente já vai deixar reservado pra não perder, então responde logo!',
   people: { min: 9, base: 12, max: 15, scenarios: [9, 12, 15] },
   // Votação: endereço do web app do Google Apps Script (ver scripts/votacao.gs).
   // Vazio = modo prévia (votos de exemplo, guardados só no aparelho).
@@ -124,7 +128,7 @@ export const VIBES = {
     budget: {
       label: 'Roteiro 1 ou 2 na Chácara Alta Vista',
       items: [
-        { key: 'host', label: 'Hospedagem', min: 2278, max: 2600 },
+        { key: 'host', label: 'Hospedagem', min: 2330, max: 2330 },
         { key: 'trans', label: 'Transporte', min: 400, max: 400 },
         { key: 'fun', label: 'Futsabão', min: 450, max: 450 },
       ],
@@ -196,7 +200,7 @@ export const VIBES = {
     route: 'londrina',
     transport: ['comboio', 'carro', 'onibus'],
     budget: {
-      label: 'Cabanas Bosque Encantado (sex–dom a sáb–seg)',
+      label: 'Cabanas Bosque Encantado (30/01 a 01/02)',
       items: [
         { key: 'host', label: 'Hospedagem', min: 1440, max: 2160 },
         { key: 'trans', label: 'Transporte', min: 400, max: 400 },
@@ -288,11 +292,11 @@ export const ITINERARIES = {
     tab: 'Roteiro 1',
     tabNote: 'sábado em família primeiro',
     steps: (v) => [
-      { short: 'Itacolomi', when: 'sábado · de dia', title: 'Família em Novo Itacolomi', text: 'Encontro e almoço com as famílias e as crianças. Onde tudo começa.', icon: 'home', scene: 'itacolomi', time: 'day' },
-      { short: 'Estrada', when: 'sábado · 18h', title: 'Pé na estrada', text: 'A galera pega a estrada junta rumo a Londrina/Cambé. 75 km, ~1h15 de playlist.', icon: 'car', scene: 'estrada', time: 'day' },
+      { short: 'Itacolomi', when: 'sáb 30/01 · de dia', title: 'Família em Novo Itacolomi', text: 'Encontro e almoço com as famílias e as crianças. Onde tudo começa.', icon: 'home', scene: 'itacolomi', time: 'day' },
+      { short: 'Estrada', when: 'sáb 30/01 · 18h', title: 'Pé na estrada', text: 'A galera pega a estrada junta rumo a Londrina/Cambé. 75 km, ~1h15 de playlist.', icon: 'car', scene: 'estrada', time: 'day' },
       { short: 'Sarau', when: 'sábado · noite', title: isCab(v) ? 'Fogueira acesa' : 'Chegada e sarau', text: isCab(v) ? 'Chegada nas cabanas, jantar, roda de fogueira, violão e filme no telão.' : 'Chegada na chácara, jantar, jogos e sarau com violão e ukulele até cansar.', icon: 'fire', scene: 'sarau', time: 'night' },
-      { short: 'Dia livre', when: 'domingo · o dia todo', title: 'Dia livre só nosso', text: isCab(v) ? 'Ping-pong, rede, churrasco e futebol de sabão no gramado.' : 'Futebol na grama, piscina, churrasco e a tarde de futebol de sabão.', icon: 'sun', scene: 'dia', time: 'day' },
-      { short: 'Volta', when: 'dom. à noite ou seg. 10h', title: 'Cada um no seu ritmo', text: `Quem trabalha segunda cedo volta domingo à noite; quem puder emendar dorme ${lugar(v)} e sai segunda às 10h.`, icon: 'moon', scene: 'ritmo', time: 'day' },
+      { short: 'Dia livre', when: 'dom 31/01 · o dia todo', title: 'Dia livre só nosso', text: isCab(v) ? 'Ping-pong, rede, churrasco e futebol de sabão no gramado.' : 'Futebol na grama, piscina, churrasco e a tarde de futebol de sabão.', icon: 'sun', scene: 'dia', time: 'day' },
+      { short: 'Volta', when: 'dom à noite ou seg 01/02 · 10h', title: 'Cada um no seu ritmo', text: `Quem trabalha segunda cedo volta domingo à noite; quem puder emendar dorme ${lugar(v)} e sai segunda às 10h.`, icon: 'moon', scene: 'ritmo', time: 'day' },
     ],
   },
   r2: {
@@ -300,10 +304,10 @@ export const ITINERARIES = {
     tab: 'Roteiro 2',
     tabNote: 'invertido: festa primeiro',
     steps: (v) => [
-      { short: 'Estrada', when: 'sexta à noite / sábado cedo', title: `Direto pra${isCab(v) ? 's cabanas' : ' chácara'}`, text: `Entrada direto ${lugar(v)} em Londrina/Cambé.`, icon: 'car', scene: 'estrada', time: 'night' },
+      { short: 'Estrada', when: 'sáb 30/01 · cedo', title: `Direto pra${isCab(v) ? 's cabanas' : ' chácara'}`, text: `Entrada direto ${lugar(v)} em Londrina/Cambé.`, icon: 'car', scene: 'estrada', time: 'day' },
       { short: 'Dia livre', when: 'sábado · o dia todo', title: 'O dia é nosso', text: isCab(v) ? 'Ping-pong, rede, churrasco e futebol de sabão no gramado.' : 'Futebol na grama, piscina, churrasco e futebol de sabão.', icon: 'sun', scene: 'dia', time: 'day' },
       { short: 'Sarau', when: 'sábado · noite', title: isCab(v) ? 'Fogueira e pernoite' : 'Sarau e pernoite', text: isCab(v) ? 'Roda de fogueira, sarau, filme no telão e pernoite nas cabanas.' : 'Sarau, resenha e pernoite na chácara.', icon: 'fire', scene: 'sarau', time: 'night' },
-      { short: 'Descida', when: 'domingo · até 10h', title: 'Descida pra Itacolomi', text: 'Check-out e a galera desce pra Novo Itacolomi (1h15).', icon: 'car', scene: 'estrada', time: 'day' },
+      { short: 'Descida', when: 'dom 31/01 · até 10h', title: 'Descida pra Itacolomi', text: 'Check-out e a galera desce pra Novo Itacolomi (1h15).', icon: 'car', scene: 'estrada', time: 'day' },
       { short: 'Itacolomi', when: 'domingo · almoço e tarde', title: 'Almoço de domingo', text: 'Almoço e tarde com a família em Novo Itacolomi.', icon: 'home', scene: 'itacolomi', time: 'day' },
     ],
   },
@@ -312,8 +316,8 @@ export const ITINERARIES = {
     tab: 'Roteiro 3',
     tabNote: 'base em Itacolomi + van no domingo',
     steps: () => [
-      { short: 'Itacolomi', when: 'sexta e sábado', title: 'Todo mundo em Itacolomi', text: 'Reunidos com a família em Novo Itacolomi.', icon: 'home', scene: 'itacolomi', time: 'day' },
-      { short: 'Van', when: 'domingo · 07h', title: 'Saída da van', text: 'A nossa van sai de Novo Itacolomi rumo a Iguaraçu. 95 km, 1h25.', icon: 'van', scene: 'van', time: 'day' },
+      { short: 'Itacolomi', when: 'sáb 30/01', title: 'Todo mundo em Itacolomi', text: 'Reunidos com a família em Novo Itacolomi.', icon: 'home', scene: 'itacolomi', time: 'day' },
+      { short: 'Van', when: 'dom 31/01 · 07h', title: 'Saída da van', text: 'A nossa van sai de Novo Itacolomi rumo a Iguaraçu. 95 km, 1h25.', icon: 'van', scene: 'van', time: 'day' },
       { short: 'Ody Park', when: 'domingo · 09h às 18h', title: 'Dia inteiro no Ody Park', text: 'Piscina de ondas de 3 metros, toboágua, rio lento e quiosque de churrasco reservado.', icon: 'wave', scene: 'ody', time: 'day' },
       { short: 'Volta', when: 'domingo · 18h30–20h', title: 'Volta pra casa', text: 'Retorno da van pra Novo Itacolomi e Apucarana, todo mundo queimado de sol.', icon: 'van', scene: 'volta', time: 'day' },
     ],
