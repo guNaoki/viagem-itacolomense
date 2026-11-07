@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useTrip } from '../lib/trip-context'
-import { VIBES, VIBE_ORDER } from '../data/trip'
+import { VIBES, VIBE_ORDER, WHY } from '../data/trip'
 import { gsap, useGSAP, reduceMotion, drawIn } from '../lib/gsap'
 import { useReveal } from '../lib/useReveal'
 import Mural from './Mural'
@@ -100,6 +100,27 @@ export default function VibePicker() {
         <p className="lede picker__lede" data-rise>
           Três opções na mesa, nenhuma decidida. Toca em cada uma: o site inteiro muda pra mostrar como seria o fim de semana lá.
         </p>
+
+        <div className="why" data-rise>
+          <p className="why__line hand">{WHY.line}</p>
+          <details className="why__box">
+            <summary className="why__btn">
+              <span>{WHY.button}</span>
+              <i aria-hidden="true">+</i>
+            </summary>
+            <ol className="why__list">
+              {WHY.reasons.map(([t, txt], i) => (
+                <li key={t}>
+                  <span className="why__n display">{i + 1}</span>
+                  <span>
+                    <b>{t}</b> {txt}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <p className="why__end hand">{WHY.end}</p>
+          </details>
+        </div>
 
         <div className="cards" role="radiogroup" aria-label="Escolha a vibe" id="vibe-cards" data-rise>
           {VIBE_ORDER.map((id) => {

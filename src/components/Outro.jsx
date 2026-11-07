@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useTrip } from '../lib/trip-context'
 import { useReveal } from '../lib/useReveal'
 import Votacao from './Votacao'
+import Mbapeso from './Mbapeso'
 import Doodle from './Doodle'
 import './Outro.css'
 
@@ -14,10 +15,7 @@ export default function Outro() {
     <section className="sec outro" ref={scope}>
       <div className="wrap">
         {/* o mascote do grupo do zap, boiando no fundo */}
-        <figure className="mbapeso" aria-hidden="true">
-          <img src="/img/mbapeso.webp" alt="" loading="lazy" decoding="async" width="640" height="640" />
-          <figcaption className="hand">Kylian Mbapeso aprova</figcaption>
-        </figure>
+        <Mbapeso caption="Kylian Mbapeso aprova" className="mbapeso--outro" />
         <p className="eyebrow">e aí?</p>
         <h2 className="display outro__title">
           <span data-split>Bora?</span>

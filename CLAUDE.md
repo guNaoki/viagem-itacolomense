@@ -50,6 +50,9 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   ligados só com o desenho na tela via IntersectionObserver — + polaroid); `story` = "antes e depois" nas 3 vibes (foto
   antiga da galera em `src/assets/antes/`, via `ANTES_PHOTOS` em `photos.js`, ao lado do lugar vazio "a próxima foto é
   aqui"). Sem foto antiga, mostra um espaço reservado.
+- **"Por que não só o Ody Park?"** (`WHY` no `trip.js`, acima dos cartões das vibes): linha à mão + `<details>` com os motivos.
+- **Kylian Mbapeso** (`Mbapeso.jsx`, `/img/mbapeso.webp`): avatar/meme do grupo do zap, figurinha redonda boiando
+  (CSS `@keyframes boia` em `base.css`) ao lado do botão do Hero e acima do "Bora?". Não pode cobrir texto.
 - **Rota** (`RouteSection.jsx`): mesmo esquema — `.route__pin` sticky dentro de `.route__track` + `.route__runway`,
   timeline com `scrub` dirige estrada (DrawSVG) e carro (MotionPath).
 - **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam. A barra não tem legenda: cada pedaço
@@ -60,7 +63,7 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 - **Votação** (`Votacao.jsx` dentro do `Outro`, `src/lib/votes.js`): contador "quem vai" (meta 12, mínimo 9, teto 15),
   cédula (nome, se vai, topo/pode ser/não curto pra cada vibe) e placar (topo 1, pode ser ½). Dados numa planilha do
   Google via Apps Script (`scripts/votacao.gs`, passo a passo no README): POST em `text/plain` (sem checagem de CORS),
-  `LockService` no script, leitura a cada 12 s só com aba visível e seção por perto. Sem `TRIP.voteUrl` = modo prévia
+  `LockService` no script, leitura a cada 12 s só com aba visível e seção por perto. Ligada na planilha do dono (`TRIP.voteUrl`). Sem `voteUrl` = modo prévia
   (votos de exemplo no `localStorage`). Sem login: a pessoa digita o nome; o nome normalizado é a chave.
 
 - **Tela de carregamento**: HTML+CSS inline no `index.html` (`#loader`, aparece antes do JS). `main.jsx` cria

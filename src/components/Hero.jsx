@@ -7,6 +7,7 @@ import Countdown from './Countdown'
 import Doodle from './Doodle'
 import Icon from './Icons'
 import ConfirmVote from './ConfirmVote'
+import Mbapeso from './Mbapeso'
 import './Hero.css'
 
 export default function Hero() {
@@ -92,10 +93,13 @@ export default function Hero() {
           </div>
           <div className="hero__col hero__col--right">
             <Countdown />
-            <button type="button" className="btn hero__cta" onClick={() => setAsking(true)}>
-              Bora votar
-              <span className="btn__dot"><Icon name="arrowDown" size={20} /></span>
-            </button>
+            <div className="hero__go">
+              <button type="button" className="btn hero__cta" onClick={() => setAsking(true)}>
+                Bora votar
+                <span className="btn__dot"><Icon name="arrowDown" size={20} /></span>
+              </button>
+              <Mbapeso caption="o Mbapeso tá dentro" className="mbapeso--hero" />
+            </div>
             {asking && <ConfirmVote onClose={closeAsk} />}
           </div>
         </div>
