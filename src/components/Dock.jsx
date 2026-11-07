@@ -11,6 +11,7 @@ const SECTIONS = [
   { id: 'jornada', label: 'O fim de semana' },
   { id: 'rota', label: 'A estrada' },
   { id: 'caixa', label: 'O caixa' },
+  { id: 'votacao', label: 'Votar' },
 ]
 
 // Navbar inferior: seletor das 3 vibes + menu de seções.
