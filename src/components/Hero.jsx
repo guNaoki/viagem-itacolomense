@@ -68,11 +68,6 @@ export default function Hero() {
   return (
     <section className="hero" id="topo" ref={scope}>
       <div className="wrap hero__wrap">
-        {/* alerta: datas acabando */}
-        <p className="hero__alert" role="note">
-          <span className="hero__alert-dot" aria-hidden="true" />
-          {TRIP.alert}
-        </p>
         <h1 className="hero__title">
           <span className="hero__kicker hand">a galera convoca:</span>
           <span className="hero__fit">
@@ -105,6 +100,11 @@ export default function Hero() {
               </button>
               <Mbapeso caption="o Mbapeso tá dentro" className="mbapeso--hero" />
             </div>
+            {/* alerta: datas acabando */}
+            <p className="hero__alert" role="note">
+              <span className="hero__alert-dot" aria-hidden="true" />
+              {TRIP.alert}
+            </p>
             {asking && <ConfirmVote onClose={closeAsk} />}
           </div>
         </div>

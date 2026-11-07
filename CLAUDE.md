@@ -68,7 +68,7 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   (votos de exemplo no `localStorage`). Sem login: a pessoa digita o nome; o nome normalizado é a chave.
 
 - **Data e alerta**: a viagem é sáb 30/01 a seg 01/02/2027 (`TRIP.dates`, contagem em `countdownTarget`); `TRIP.alert`
-  aparece numa tira amarela no topo do Hero ("as datas tão acabando..."). Chácara fechou em R$ 2.330.
+  aparece numa tira amarela no Hero, abaixo do botão "Bora votar" e do Mbapeso ("as datas tão acabando..."). Chácara fechou em R$ 2.330.
 - **Foto única na jornada**: se for deitada (paisagem), a polaroid fica larga e sem corte (`.chap__one.is-wide`, decidido
   no `onLoad` da imagem).
 
