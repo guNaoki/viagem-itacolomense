@@ -107,6 +107,13 @@
 .chap__text { margin: 0; color: var(--ink-2); font-size: 17px; }
 
 .chap__pics { position: relative; min-width: 0; }
+
+/* o que dá pra fazer naquela parada, em desenhos (ex.: dia livre nas cabanas) */
+.chap__doing { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; max-width: 460px; }
+.chap__doing li { display: grid; justify-items: center; gap: 2px; text-align: center; min-width: 0; }
+.chap__doing li:nth-child(odd) .sketch { transform: rotate(-3deg); }
+.chap__doing li:nth-child(even) .sketch { transform: rotate(3deg); }
+.chap__doing .hand { font-size: 19px; }
 .chap__one { width: min(78vw, 420px); transform: rotate(-2deg); }
 .chap--r .chap__one { transform: rotate(2.2deg); justify-self: end; }
 .chap__img { aspect-ratio: 4 / 5; overflow: hidden; }

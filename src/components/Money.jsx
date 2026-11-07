@@ -224,7 +224,7 @@ export default function Money() {
               {brl(TRIP.price)}
               <Doodle type="circle" stroke={3} />
             </span>
-            <span className="hand money__pp">por pessoa. só isso.</span>
+            <span className="hand money__pp">por pessoa, apenas.</span>
           </div>
         </div>
 

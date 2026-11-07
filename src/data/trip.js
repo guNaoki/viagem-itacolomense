@@ -157,6 +157,7 @@ export const VIBES = {
       { t: 'cinema no telão', art: 'telao' },
       { t: 'ping-pong', art: 'pingpong' },
       { t: 'noite estrelada', art: 'estrelas' },
+      { t: 'futsabão', art: 'futsabao' },
     ],
     stay: '5 cabanas com colchão de casal — até 10 nas cabanas, acima disso a gente combina colchão extra. Cozinha e banheiros compartilhados. Não tem piscina nem campo.',
     unique: {
@@ -191,7 +192,7 @@ export const VIBES = {
       ],
       dia: [
         { src: '/img/cabanas-11.webp', note: 'as cabanas de dia' },
-        { src: '/img/cabanas-2.webp', note: 'rede e preguiça' },
+        { src: '/img/cabanas-2.webp', note: 'pausa entre um jogo e outro' },
       ],
       ritmo: [{ src: '/img/cabanas-4.webp', note: 'mais uma noite?' }],
     },
@@ -285,6 +286,14 @@ export const VIBES = {
 ----------------------------------------------------------------------- */
 const isCab = (v) => v.id === 'cabanas'
 const lugar = (v) => (isCab(v) ? 'nas cabanas' : 'na chácara')
+// dia livre nas cabanas: o dia é cheio (os desenhos aparecem no meio da parada)
+const CAB_DIA = 'Futsabão no gramado, vôlei, ping-pong valendo a honra, baralho na mesa, churrasco no meio da tarde. A rede é só pra quem cansar.'
+const CAB_DOING = [
+  { t: 'futsabão', art: 'futsabao' },
+  { t: 'vôlei', art: 'volei' },
+  { t: 'ping-pong', art: 'pingpong' },
+  { t: 'baralho', art: 'baralho' },
+]
 
 export const ITINERARIES = {
   r1: {
@@ -295,7 +304,7 @@ export const ITINERARIES = {
       { short: 'Itacolomi', when: 'sáb 30/01 · de dia', title: 'Família em Novo Itacolomi', text: 'Encontro e almoço com as famílias e as crianças. Onde tudo começa.', icon: 'home', scene: 'itacolomi', time: 'day' },
       { short: 'Estrada', when: 'sáb 30/01 · 18h', title: 'Pé na estrada', text: 'A galera pega a estrada junta rumo a Londrina/Cambé. 75 km, ~1h15 de playlist.', icon: 'car', scene: 'estrada', time: 'day' },
       { short: 'Sarau', when: 'sábado · noite', title: isCab(v) ? 'Fogueira acesa' : 'Chegada e sarau', text: isCab(v) ? 'Chegada nas cabanas, jantar, roda de fogueira, violão e filme no telão.' : 'Chegada na chácara, jantar, jogos e sarau com violão e ukulele até cansar.', icon: 'fire', scene: 'sarau', time: 'night' },
-      { short: 'Dia livre', when: 'dom 31/01 · o dia todo', title: 'Dia livre só nosso', text: isCab(v) ? 'Ping-pong, rede, churrasco e futebol de sabão no gramado.' : 'Futebol na grama, piscina, churrasco e a tarde de futebol de sabão.', icon: 'sun', scene: 'dia', time: 'day' },
+      { short: 'Dia livre', when: 'dom 31/01 · o dia todo', title: 'Dia livre só nosso', text: isCab(v) ? CAB_DIA : 'Futebol na grama, piscina, churrasco e a tarde de futebol de sabão.', icon: 'sun', scene: 'dia', time: 'day', doing: isCab(v) ? CAB_DOING : undefined },
       { short: 'Volta', when: 'dom à noite ou seg 01/02 · 10h', title: 'Cada um no seu ritmo', text: `Quem trabalha segunda cedo volta domingo à noite; quem puder emendar dorme ${lugar(v)} e sai segunda às 10h.`, icon: 'moon', scene: 'ritmo', time: 'day' },
     ],
   },
@@ -305,7 +314,7 @@ export const ITINERARIES = {
     tabNote: 'invertido: festa primeiro',
     steps: (v) => [
       { short: 'Estrada', when: 'sáb 30/01 · cedo', title: `Direto pra${isCab(v) ? 's cabanas' : ' chácara'}`, text: `Entrada direto ${lugar(v)} em Londrina/Cambé.`, icon: 'car', scene: 'estrada', time: 'day' },
-      { short: 'Dia livre', when: 'sábado · o dia todo', title: 'O dia é nosso', text: isCab(v) ? 'Ping-pong, rede, churrasco e futebol de sabão no gramado.' : 'Futebol na grama, piscina, churrasco e futebol de sabão.', icon: 'sun', scene: 'dia', time: 'day' },
+      { short: 'Dia livre', when: 'sábado · o dia todo', title: 'O dia é nosso', text: isCab(v) ? CAB_DIA : 'Futebol na grama, piscina, churrasco e futebol de sabão.', icon: 'sun', scene: 'dia', time: 'day', doing: isCab(v) ? CAB_DOING : undefined },
       { short: 'Sarau', when: 'sábado · noite', title: isCab(v) ? 'Fogueira e pernoite' : 'Sarau e pernoite', text: isCab(v) ? 'Roda de fogueira, sarau, filme no telão e pernoite nas cabanas.' : 'Sarau, resenha e pernoite na chácara.', icon: 'fire', scene: 'sarau', time: 'night' },
       { short: 'Descida', when: 'dom 31/01 · até 10h', title: 'Descida pra Itacolomi', text: 'Check-out e a galera desce pra Novo Itacolomi (1h15).', icon: 'car', scene: 'estrada', time: 'day' },
       { short: 'Itacolomi', when: 'domingo · almoço e tarde', title: 'Almoço de domingo', text: 'Almoço e tarde com a família em Novo Itacolomi.', icon: 'home', scene: 'itacolomi', time: 'day' },

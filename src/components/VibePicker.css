@@ -135,6 +135,6 @@
 .sketch__fill .f3 { fill: var(--coral); opacity: 0.75; }
 .sketch__ink > * { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 @media (min-width: 700px) {
-  .rola__list { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+  .rola__list { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 24px; }
   .rola__t { font-size: 23px; }
 }

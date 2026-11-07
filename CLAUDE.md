@@ -69,6 +69,8 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 
 - **Data e alerta**: a viagem é sáb 30/01 a seg 01/02/2027 (`TRIP.dates`, contagem em `countdownTarget`); `TRIP.alert`
   aparece numa tira amarela no Hero, abaixo do botão "Bora votar" e do Mbapeso ("as datas tão acabando..."). Chácara fechou em R$ 2.330.
+- **Desenhos dentro da parada**: um passo do roteiro pode ter `doing` (`{ t, art }`), que vira uma fileira de desenhos do
+  `Sketch` no meio da parada (hoje: dia livre nas Cabanas — futsabão, vôlei, ping-pong, baralho).
 - **Foto única na jornada**: se for deitada (paisagem), a polaroid fica larga e sem corte (`.chap__one.is-wide`, decidido
   no `onLoad` da imagem).
 

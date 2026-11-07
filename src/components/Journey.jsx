@@ -6,6 +6,7 @@ import { scrollToEl } from '../lib/scroll'
 import { gsap, ScrollTrigger, useGSAP, reduceMotion } from '../lib/gsap'
 import { sky } from '../gl/sky-state'
 import Mural from './Mural'
+import Sketch from './Sketch'
 import Icon from './Icons'
 import './Journey.css'
 
@@ -191,6 +192,16 @@ function Trip({ steps, v, setMode }) {
               </p>
               <h3 className="chap__title display" data-split>{s.title}</h3>
               <p className="chap__text" data-rise>{s.text}</p>
+              {s.doing && (
+                <ul className="chap__doing" data-rise>
+                  {s.doing.map((d) => (
+                    <li key={d.t}>
+                      <Sketch art={d.art} />
+                      <span className="hand">{d.t}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="chap__pics" data-rise>
               <Pics photos={photos[i]} scene={s.scene} />
