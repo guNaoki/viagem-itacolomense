@@ -76,6 +76,7 @@ export const VIBES = {
     stay: 'Cabe até 15 com folga: 3 quartos, 8 camas + colchões extras e 3 banheiros.',
     // o detalhe que só ela tem (desenho do fogão aceso + foto)
     unique: {
+      art: 'fogao',
       kicker: 'só a chácara tem',
       title: 'Fogão a lenha de verdade',
       text: 'A panela fica no fogo enquanto a galera conversa em volta, o cheiro de lenha toma a casa e de manhã o café sai dali mesmo.',
@@ -151,6 +152,19 @@ export const VIBES = {
       { t: 'noite estrelada', art: 'estrelas' },
     ],
     stay: '5 cabanas com colchão de casal — até 10 nas cabanas, acima disso a gente combina colchão extra. Cozinha e banheiros compartilhados. Não tem piscina nem campo.',
+    unique: {
+      art: 'telao',
+      kicker: 'só as cabanas têm',
+      title: 'Cinema no meio do mato',
+      text: 'Um telão entre as árvores, cada um com seu cobertor, o filme passando e o céu cheio de estrela por cima. Nem precisa ser filme bom.',
+      photo: { src: '/img/cabanas-6.webp', note: 'a sessão das 22h' },
+    },
+    story: {
+      kicker: 'a gente já tem história',
+      title: 'Falta escrever esse capítulo',
+      before: 'foto antiga da galera',
+      after: { src: '/img/cabanas-3.webp', note: 'a próxima foto é aqui' },
+    },
     link: 'https://www.airbnb.com.br/rooms/1726935758701641036',
     linkLabel: 'Ver o anúncio no Airbnb',
     photos: [
@@ -213,6 +227,12 @@ export const VIBES = {
       { t: 'van só nossa', art: 'van' },
     ],
     stay: 'Sem hospedagem: a base é Novo Itacolomi, com a família. É bate-volta de domingo.',
+    story: {
+      kicker: 'a gente já tem história',
+      title: 'Falta escrever esse capítulo',
+      before: 'foto antiga da galera',
+      after: { src: '/img/ody-2.webp', note: 'a próxima foto é aqui' },
+    },
     link: 'https://odypark.com.br/',
     linkLabel: 'Ver o site do Ody Park',
     photos: [

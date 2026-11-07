@@ -36,7 +36,7 @@ function Detail({ v }) {
         gsap.from(el.querySelectorAll('.uq__copy > *, .ad__kicker, .ad__title'), { y: 30, autoAlpha: 0, stagger: 0.08, duration: 0.9, scrollTrigger: t })
         gsap.from(el.querySelectorAll('.polaroid'), { y: 70, rotate: (i) => (i % 2 ? 12 : -12), autoAlpha: 0, stagger: 0.18, duration: 1.1, delay: 0.2, ease: 'back.out(1.4)', scrollTrigger: t })
       })
-      drawIn('.fogao__ink > *, .ad__arrow path', { duration: 1.4, stagger: 0.04, scrollTrigger: { trigger: '.uq', start: 'top 75%', once: true } })
+      drawIn('.fogao__ink > *, .art__ink > *, .ad__arrow path', { duration: 1.4, stagger: 0.04, scrollTrigger: { trigger: '.uq', start: 'top 75%', once: true } })
     },
     { scope: ref },
   )

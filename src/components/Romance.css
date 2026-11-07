@@ -8,7 +8,10 @@
 .uq__photo img { aspect-ratio: 4 / 5; }
 .uq__photo figcaption { font-size: 18px; }
 
-.fogao { width: 100%; height: auto; overflow: visible; }
+.art { width: 100%; height: auto; overflow: visible; }
+.art__fill .f1 { fill: var(--accent); opacity: 0.5; }
+.art__fill .f2 { fill: var(--gold); opacity: 0.5; }
+.art__ink > * { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 .fogao__fill .f1 { fill: var(--accent); opacity: 0.55; }
 .fogao__fill .f2 { fill: var(--gold); opacity: 0.5; }
 .fogao__ink > *, .fogao__steam > * { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -73,3 +76,16 @@
   .ad__pic { padding: 12px 12px 0; }
   .ad__pic figcaption { font-size: 22px; }
 }
+
+/* telão: feixe do projetor, brilho da tela e luzinhas */
+.telao__beam { fill: var(--gold); opacity: 0.22; }
+.telao__lights circle { fill: var(--gold); stroke: var(--ink); stroke-width: 1.4; }
+.telao__stars path { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.telao.is-on .telao__beam { animation: beam 2.4s steps(1, end) infinite; }
+.telao.is-on .telao__glow { animation: glow 3s ease-in-out infinite alternate; }
+.telao.is-on .tw { animation: twinkle 1.8s ease-in-out infinite alternate; }
+.telao.is-on .tw--2 { animation-delay: 0.6s; }
+.telao.is-on .tw--3 { animation-delay: 1.2s; }
+@keyframes beam { 0%, 100% { opacity: 0.22; } 40% { opacity: 0.32; } 43% { opacity: 0.14; } 70% { opacity: 0.28; } }
+@keyframes glow { from { opacity: 0.35; } to { opacity: 0.7; } }
+@keyframes twinkle { from { opacity: 1; } to { opacity: 0.25; } }

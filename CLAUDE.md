@@ -45,10 +45,11 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 - **"O que rola"** (`Sketch.jsx`): cada item de `VIBES[x].doing` (`{ t, art }`) vira um desenho SVG à mão — mancha de
   cor fora do registro (risografia) + traço que se desenha (`pathLength="1"` + `drawIn`). Desenho novo = entrada no `ART`.
   (Bilhete "imagina o sábado", carta na manga e seção de memes foram testados e descartados pelo dono.)
-- **Romance da vibe** (`Romance.jsx`, só aparece se a vibe tiver os dados — hoje só a Chácara): `unique` = "só a chácara
-  tem" (desenho do fogão a lenha com fogo/vapor em CSS `@keyframes`, ligados só com o desenho na tela via
-  IntersectionObserver, + polaroid); `story` = "antes e depois" (foto antiga da galera em `src/assets/antes/`, via
-  `ANTES_PHOTOS` em `photos.js`, ao lado do lugar vazio "a próxima foto é aqui"). Sem foto antiga, mostra um espaço reservado.
+- **Romance da vibe** (`Romance.jsx`, aparece se a vibe tiver os dados no `trip.js`): `unique` = "só a X tem" (desenho
+  animado escolhido por `art`: `fogao` na Chácara, `telao` nas Cabanas — fogo/vapor/feixe/luzinhas em CSS `@keyframes`,
+  ligados só com o desenho na tela via IntersectionObserver — + polaroid); `story` = "antes e depois" nas 3 vibes (foto
+  antiga da galera em `src/assets/antes/`, via `ANTES_PHOTOS` em `photos.js`, ao lado do lugar vazio "a próxima foto é
+  aqui"). Sem foto antiga, mostra um espaço reservado.
 - **Rota** (`RouteSection.jsx`): mesmo esquema — `.route__pin` sticky dentro de `.route__track` + `.route__runway`,
   timeline com `scrub` dirige estrada (DrawSVG) e carro (MotionPath).
 - **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam. A barra não tem legenda: cada pedaço

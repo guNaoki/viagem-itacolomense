@@ -9,16 +9,22 @@ import './Romance.css'
    - AntesDepois: foto antiga da galera ao lado do lugar vazio, "a próxima foto é aqui"
 */
 
-// fogão a lenha desenhado: o fogo tremula e a panela solta vapor (CSS, só enquanto está na tela)
-function Fogao() {
+// liga a classe "is-on" só enquanto o desenho está na tela (as animações CSS dependem dela)
+function useOnScreen() {
   const ref = useRef(null)
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => ref.current?.classList.toggle('is-on', e.isIntersecting))
     io.observe(ref.current)
     return () => io.disconnect()
   }, [])
+  return ref
+}
+
+// fogão a lenha desenhado: o fogo tremula e a panela solta vapor
+function Fogao() {
+  const ref = useOnScreen()
   return (
-    <svg className="fogao" viewBox="0 0 240 200" ref={ref} aria-hidden="true">
+    <svg className="fogao art" viewBox="0 0 240 200" ref={ref} aria-hidden="true">
       <g className="fogao__fill">
         <path className="f2" d="M34 94 H214 V182 H34Z" transform="translate(5 4)" />
         <path className="f1" d="M72 58 H122 L118 84 H76Z" transform="translate(4 3)" />
@@ -48,7 +54,51 @@ function Fogao() {
   )
 }
 
+// telão no meio do mato: o feixe do projetor pisca, a tela brilha e as luzinhas piscam
+function Telao() {
+  const ref = useOnScreen()
+  return (
+    <svg className="telao art" viewBox="0 0 240 200" ref={ref} aria-hidden="true">
+      <g className="art__fill">
+        <path className="f2 telao__glow" d="M72 42 H188 V118 H72Z" transform="translate(4 3)" />
+        <path className="f1" d="M6 190 L32 112 L58 190Z M200 190 L222 120 L244 190Z" transform="translate(4 3)" />
+      </g>
+      <path className="telao__beam" d="M126 168 L72 118 H188 L138 168Z" />
+      <g className="art__ink">
+        <path pathLength="1" d="M70 40 H190 V120 H70Z" />
+        <path pathLength="1" d="M70 40 V190 M190 40 V190 M70 40 L56 30 M190 40 L204 30" />
+        <path pathLength="1" d="M82 110 L104 82 L120 98 L140 72 L178 110" />
+        <circle pathLength="1" cx="164" cy="60" r="7" />
+        <path pathLength="1" d="M6 190 L32 112 L58 190Z M32 190 V198 M20 160 H44 M14 176 H50" />
+        <path pathLength="1" d="M200 190 L222 120 L244 190Z M222 190 V198 M210 160 H234 M206 176 H238" />
+        <path pathLength="1" d="M118 168 H146 V184 H118Z" />
+        <circle pathLength="1" cx="124" cy="162" r="6" />
+        <circle pathLength="1" cx="140" cy="162" r="6" />
+        <path pathLength="1" d="M84 196 Q84 182 96 182 Q108 182 108 196 M156 196 Q156 182 168 182 Q180 182 180 196" />
+        <circle pathLength="1" cx="96" cy="174" r="7" />
+        <circle pathLength="1" cx="168" cy="174" r="7" />
+        <path pathLength="1" d="M10 22 Q40 40 70 30 M190 30 Q220 40 236 22" />
+      </g>
+      <g className="telao__lights">
+        <circle className="tw" cx="22" cy="28" r="3" />
+        <circle className="tw tw--2" cx="40" cy="34" r="3" />
+        <circle className="tw tw--3" cx="56" cy="33" r="3" />
+        <circle className="tw tw--2" cx="206" cy="33" r="3" />
+        <circle className="tw" cx="222" cy="30" r="3" />
+      </g>
+      <g className="telao__stars">
+        <path className="tw tw--3" d="M120 10 v8 M116 14 h8" />
+        <path className="tw" d="M30 64 v6 M27 67 h6" />
+        <path className="tw tw--2" d="M214 74 v6 M211 77 h6" />
+      </g>
+    </svg>
+  )
+}
+
+const ART = { fogao: Fogao, telao: Telao }
+
 export function Unique({ u }) {
+  const Art = ART[u.art] || Fogao
   return (
     <section className="uq" aria-label={u.title}>
       <div className="uq__copy">
@@ -57,7 +107,7 @@ export function Unique({ u }) {
         <p className="uq__text">{u.text}</p>
       </div>
       <div className="uq__art">
-        <Fogao />
+        <Art />
         <figure className="polaroid uq__photo">
           <span className="tape" style={{ top: -12, left: '50%', transform: 'translateX(-50%) rotate(4deg)' }} />
           <img src={u.photo.src} srcSet={srcSetOf(u.photo.src)} sizes="(min-width: 900px) 280px, 44vw" alt={u.photo.note} loading="lazy" decoding="async" />
