@@ -30,7 +30,7 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
 - **Céu** (`src/gl/Sky.jsx`): WebGL puro, um triângulo em tela cheia. Lê o objeto mutável `sky` de
   `src/gl/sky-state.js` a cada quadro (fora do React). Cores/forma do horizonte por vibe vêm de `VIBES[x].sky`
   e são interpoladas com GSAP. O grão de papel é feito no shader.
-- **Seções** (ordem em `App.jsx`): Hero → Marquee → VibePicker → Journey → RouteSection → Money → Outro; Dock (navbar) e
+- **Seções** (ordem em `App.jsx`): Hero → Marquee → VibePicker → Journey → RouteSection → Money → Galera → Outro; Dock (navbar) e
   TopBar fixos. Seções que dependem da vibe usam `key={vibe}` no miolo pra remontar e reanimar.
 - **Jornada** (`Journey.jsx`): **rolagem normal, nada trava a tela** (decisão do dono do site — a versão com tela
   travada foi descartada por causar problemas). As paradas são blocos `.chap` um embaixo do outro; só o trajeto em
@@ -38,7 +38,13 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   "jan/27" (só contorno da cor do papel em volta do traço, nós e textos). O topo (`TopBar`) também não tem fundo. Um ScrollTrigger por parada (`top 60%` → `bottom 60%`)
   empurra o carrinho (`quickTo`) do meio do caminho anterior ao meio do próximo, acende o nó e chama
   `setMode(step.time)`. Os rótulos do trajeto são botões que rolam até a parada. Fotos: 1 foto = polaroid,
-  várias = faixa com swipe (`Polaroids`), nenhuma = espaço reservado "em breve".
+  várias = mural (`Mural`, layout `grid`), nenhuma = espaço reservado "em breve".
+- **Fotos em mural** (`Mural.jsx`): nada de faixa pra arrastar (decisão do dono). Layouts `feature` (VibePicker: 1 grande +
+  até 5, "+N" no último), `grid` (Jornada) e `masonry` (Galera, sem cortar). Tocar abre a foto grande (`Lightbox`,
+  trava a rolagem com `lockScroll` de `scroll.js`).
+- **"Imagina o sábado"**: `VIBES[x].story` (bilhete pautado no VibePicker); só Chácara e Cabanas têm.
+- **Galera** (`Galera.jsx`): memes/fotos do grupo em `src/assets/galera/` (`src/data/galera.js`); texto em `GALERA`
+  no `trip.js`. Sem arquivo na pasta a seção não aparece.
 - **Rota** (`RouteSection.jsx`): mesmo esquema — `.route__pin` sticky dentro de `.route__track` + `.route__runway`,
   timeline com `scrub` dirige estrada (DrawSVG) e carro (MotionPath).
 - **Caixa** (`Money.jsx`): recalcula com N pessoas; itens com `perPerson` escalam; se faltar dinheiro, mostra

@@ -1,0 +1,121 @@
+/* ---------- mural de polaroids (sem faixa pra arrastar) ---------- */
+.mural {
+  list-style: none;
+  margin: 0;
+  padding: 30px 0 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 14px;
+}
+.mural__item { min-width: 0; display: flex; }
+.mural__item.is-big { grid-column: 1 / -1; }
+.mural__item.is-desk { display: none; }
+
+.mural__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 7px 7px 0;
+  text-align: left;
+  transform: rotate(var(--tilt));
+  transition: transform 0.5s var(--ease), box-shadow 0.4s;
+}
+.mural__card:active { transform: rotate(0deg) scale(0.98); }
+.mural__img { position: relative; display: block; aspect-ratio: 1; overflow: hidden; flex: 1 0 auto; }
+.mural__item.is-big .mural__img { aspect-ratio: 4 / 3; }
+.mural__img img { position: absolute; inset: 0; transition: transform 1s var(--ease); }
+.mural__cap { font-family: var(--f-hand); font-size: 17px; font-weight: 600; line-height: 1.05; padding: 7px 2px 10px; }
+.mural__item.is-big .mural__cap { font-size: 21px; }
+
+/* "+N fotos" na última do mural */
+.mural__more {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(20, 17, 15, 0.55);
+  color: #fffdf7;
+  font-size: 44px;
+  font-weight: 800;
+}
+.mural__more--d { display: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .mural__card:hover { transform: rotate(0deg) translateY(-4px); box-shadow: 0 1px 1px rgba(28, 25, 23, 0.08), 0 22px 40px -16px rgba(120, 60, 10, 0.45); }
+  .mural__card:hover .mural__img img { transform: scale(1.04); }
+}
+
+@media (min-width: 900px) {
+  .mural--feature { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 26px; padding-top: 44px; }
+  .mural--feature .mural__item.is-big { grid-column: span 2; grid-row: span 2; }
+  .mural--feature .mural__item.is-big .mural__img { aspect-ratio: auto; }
+  .mural__item.is-desk { display: flex; }
+  .mural__more--m { display: none; }
+  .mural__more--d { display: grid; }
+  .mural__card { padding: 10px 10px 0; }
+  .mural__cap { font-size: 20px; }
+  .mural__item.is-big .mural__cap { font-size: 24px; }
+}
+
+/* ---------- foto ampliada ---------- */
+.lb {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  animation: lb-in 0.35s var(--ease) both;
+}
+@keyframes lb-in { from { opacity: 0; } }
+.lb__bg { position: absolute; inset: 0; background: rgba(20, 17, 15, 0.88); cursor: zoom-out; }
+.lb__track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+  outline: none;
+}
+.lb__track::-webkit-scrollbar { display: none; }
+.lb__slide {
+  flex: 0 0 100%;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 64px 14px 70px;
+  scroll-snap-align: center;
+  cursor: zoom-out;
+}
+.lb__card { cursor: auto; }
+.lb__card { padding: 10px 10px 0; transform: rotate(-1deg); max-width: min(100%, 1100px); animation: lb-pop 0.5s var(--ease) both; }
+@keyframes lb-pop { from { transform: translateY(30px) rotate(-4deg) scale(0.94); } }
+.lb__card img { width: auto; height: auto; max-width: 100%; max-height: calc(100svh - 190px); object-fit: contain; }
+.lb__card figcaption { font-size: 24px; }
+.lb__count { position: absolute; left: 0; right: 0; bottom: 22px; margin: 0; text-align: center; font-size: 22px; color: #fef3c7; pointer-events: none; }
+.lb__close, .lb__nav {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fffdf7;
+  color: #1c1917;
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.6);
+}
+.lb__close svg, .lb__nav svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.lb__close { top: calc(12px + env(safe-area-inset-top)); right: 12px; }
+.lb__nav { top: 50%; margin-top: -24px; display: none; }
+.lb__nav:disabled { opacity: 0.3; cursor: default; }
+.lb__nav--prev { left: 18px; }
+.lb__nav--next { right: 18px; }
+@media (hover: hover) and (pointer: fine) { .lb__nav { display: grid; } }
+
+/* masonry: memes e fotos no formato original, sem cortar */
+.mural--masonry { display: block; columns: 2; column-gap: 14px; }
+.mural--masonry .mural__item { break-inside: avoid; margin-bottom: 22px; }
+.mural--masonry .mural__img { aspect-ratio: auto; }
+.mural--masonry .mural__img img { position: static; height: auto; }
+.mural--masonry .mural__cap:empty { padding: 0 0 7px; }
+@media (min-width: 760px) { .mural--masonry { columns: 3; column-gap: 26px; } .mural--masonry .mural__item { margin-bottom: 30px; } }
+@media (min-width: 1200px) { .mural--masonry { columns: 4; } }

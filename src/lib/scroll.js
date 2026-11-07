@@ -76,3 +76,9 @@ export function scrollToEl(target, opts = {}) {
     scrollTo({ top: y, behavior: opts.immediate ? 'auto' : 'smooth' })
   }
 }
+
+// trava/destrava a rolagem da página (ex.: foto ampliada aberta)
+export function lockScroll(on) {
+  if (lenis) on ? lenis.stop() : lenis.start()
+  document.documentElement.style.overflow = on ? 'hidden' : ''
+}

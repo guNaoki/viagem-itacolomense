@@ -95,26 +95,7 @@
 .vd__place { margin: 6px 0 0; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
 .vd__place .hand { font-size: 22px; letter-spacing: 0; text-transform: none; font-weight: 600; color: var(--accent-ink); }
 
-.strip {
-  display: flex;
-  gap: 22px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  padding: 34px var(--gut) 30px;
-  margin: 0 calc(var(--gut) * -1);
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
-  cursor: grab;
-}
-.strip::-webkit-scrollbar { display: none; }
-.strip.is-drag { scroll-snap-type: none; cursor: grabbing; }
-.strip.is-drag img { pointer-events: none; }
-.strip__item { flex: 0 0 auto; width: min(72vw, 320px); scroll-snap-align: center; transform: rotate(var(--tilt)); user-select: none; }
-.strip__img { aspect-ratio: 4 / 5; overflow: hidden; }
-.strip__end { flex: 0 0 1px; }
-.vd__hint { font-size: 22px; color: var(--ink-2); margin: -6px 0 8px; text-align: right; }
-@media (min-width: 900px) { .vd__hint { display: none; } }
+.vd__hint { font-size: 22px; color: var(--ink-2); margin: 10px 0 8px; text-align: right; transform: rotate(-1.5deg); }
 
 .vd__grid { display: grid; gap: 34px; margin-top: 18px; }
 .vd__pitch {
@@ -163,3 +144,45 @@
 .planb__text { margin: 0 0 12px; color: var(--ink-2); }
 .planb__link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 600; color: var(--accent-ink); }
 @media (min-width: 700px) { .planb { grid-template-columns: auto 1fr; align-items: center; gap: 40px; padding: 30px 34px; } }
+
+/* "imagina o sábado": bilhete em papel pautado */
+.story {
+  position: relative;
+  margin: 30px 0 50px;
+  padding: 30px 22px 26px;
+  max-width: 760px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in srgb, var(--accent) 22%, transparent) 33px 34px),
+    var(--sheet);
+  box-shadow: inset 0 0 0 1px var(--line), 0 18px 34px -22px rgba(60, 30, 5, 0.45);
+  transform: rotate(0.6deg);
+}
+.story::before {
+  /* margem vermelha do caderno */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 64px;
+  width: 1.5px;
+  background: color-mix(in srgb, var(--ember) 45%, transparent);
+}
+.story__title { margin: 0 0 12px; font-size: clamp(34px, 7vw, 48px); color: var(--accent-ink); transform: rotate(-2deg); width: max-content; }
+.story__beats { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.story__beats li { display: grid; grid-template-columns: 56px 1fr; gap: 0 18px; align-items: baseline; }
+.story__t { font-size: 24px; color: var(--accent-ink); text-align: right; }
+.story__txt { font-size: 17px; line-height: 1.4; }
+.story__end {
+  margin: 22px 0 0;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 600;
+  font-style: italic;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+@media (min-width: 900px) {
+  .story { padding: 40px 48px 36px; margin: 46px 0 60px; }
+  .story::before { left: 104px; }
+  .story__beats li { grid-template-columns: 64px 1fr; gap: 0 34px; }
+  .story__txt { font-size: 19px; }
+}

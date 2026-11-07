@@ -111,7 +111,8 @@
 .chap--r .chap__one { transform: rotate(2.2deg); justify-self: end; }
 .chap__img { aspect-ratio: 4 / 5; overflow: hidden; }
 .chap__img img { width: 100%; height: 100%; object-fit: cover; }
-.chap__strip { padding-top: 24px; }
+.chap__mural { padding-top: 14px; max-width: 620px; }
+.chap--r .chap__mural { margin-left: auto; }
 
 .chap__empty {
   width: min(78vw, 420px);
@@ -139,7 +140,7 @@
   .chap--r .chap__copy { order: 2; }
   .chap--r .chap__pics { order: 1; }
   .chap__text { font-size: 19px; }
-  .chap__strip { margin: 0; padding-left: 0; padding-right: 0; }
+  .chap--r .chap__mural { margin-left: 0; }
   .chap--r .chap__one, .chap--r .chap__empty { justify-self: start; margin-left: 0; }
   .chap--l .chap__one, .chap--l .chap__empty { justify-self: end; margin-left: auto; }
 }

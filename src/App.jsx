@@ -12,6 +12,7 @@ import Journey from './components/Journey'
 import RouteSection from './components/RouteSection'
 import Money from './components/Money'
 import Outro from './components/Outro'
+import Galera from './components/Galera'
 import VibeFlood from './components/VibeFlood'
 
 function Page() {
@@ -38,6 +39,7 @@ function Page() {
         <Journey />
         <RouteSection />
         <Money />
+        <Galera />
         <Outro />
       </main>
       <Dock />

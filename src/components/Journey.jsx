@@ -5,7 +5,7 @@ import { useReveal } from '../lib/useReveal'
 import { scrollToEl } from '../lib/scroll'
 import { gsap, ScrollTrigger, useGSAP, reduceMotion } from '../lib/gsap'
 import { sky } from '../gl/sky-state'
-import Polaroids from './Polaroids'
+import Mural from './Mural'
 import Icon from './Icons'
 import './Journey.css'
 
@@ -42,7 +42,7 @@ function Pics({ photos, scene }) {
       </figure>
     )
   }
-  return <Polaroids photos={photos} className="chap__strip" />
+  return <Mural photos={photos} className="chap__mural" />
 }
 
 function Trip({ steps, v, setMode }) {

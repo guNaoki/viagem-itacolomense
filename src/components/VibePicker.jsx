@@ -3,7 +3,7 @@ import { useTrip } from '../lib/trip-context'
 import { VIBES, VIBE_ORDER } from '../data/trip'
 import { gsap, useGSAP, reduceMotion, drawIn } from '../lib/gsap'
 import { useReveal } from '../lib/useReveal'
-import Polaroids from './Polaroids'
+import Mural from './Mural'
 import Doodle from './Doodle'
 import Icon from './Icons'
 import { small, srcSetOf } from '../lib/img'
@@ -22,8 +22,9 @@ function Detail({ v }) {
     () => {
       if (reduceMotion()) return
       gsap.from('.vd__head > *', { y: 30, autoAlpha: 0, stagger: 0.07, duration: 0.9, delay: 0.2 })
-      gsap.from('.strip__item', { y: 120, rotate: (i) => (i % 2 ? 14 : -14), autoAlpha: 0, stagger: 0.07, duration: 1.1, delay: 0.3, ease: 'back.out(1.3)' })
+      gsap.from('.mural__item', { y: 120, rotate: (i) => (i % 2 ? 14 : -14), autoAlpha: 0, stagger: 0.07, duration: 1.1, delay: 0.3, ease: 'back.out(1.3)' })
       gsap.from('.vd__reveal', { y: 24, autoAlpha: 0, stagger: 0.08, duration: 0.8, delay: 0.5 })
+      gsap.from('.story__beats li', { x: -24, autoAlpha: 0, stagger: 0.12, duration: 0.8, scrollTrigger: { trigger: '.story', start: 'top 80%', once: true } })
       drawIn('.vd__circled path', { scrollTrigger: { trigger: '.vd__doing', start: 'top 85%', once: true } })
     },
     { scope: ref },
@@ -36,8 +37,24 @@ function Detail({ v }) {
         <p className="vd__place">{v.place} — <span className="hand">{v.kicker}</span></p>
       </header>
 
-      <Polaroids photos={v.photos} />
-      <p className="vd__hint hand vd__reveal" aria-hidden="true">arrasta pro lado →</p>
+      <Mural photos={v.photos} layout="feature" />
+      <p className="vd__hint hand vd__reveal" aria-hidden="true">toca na foto pra ver grande</p>
+
+      {v.story && (
+        <aside className="story vd__reveal" aria-label={v.story.title}>
+          <span className="tape" style={{ top: -13, right: 34, transform: 'rotate(5deg)' }} />
+          <p className="story__title hand">{v.story.title}…</p>
+          <ol className="story__beats">
+            {v.story.beats.map(([t, txt]) => (
+              <li key={t}>
+                <span className="story__t hand">{t}</span>
+                <span className="story__txt">{txt}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="story__end display">{v.story.end}</p>
+        </aside>
+      )}
 
       <div className="vd__grid">
         <p className="vd__pitch vd__reveal">{v.pitch}</p>

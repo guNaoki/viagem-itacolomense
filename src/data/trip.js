@@ -18,6 +18,14 @@ export const TRIP = {
   organizers: 2,
 }
 
+/* Seção "A gente" (memes e fotos em src/assets/galera/) */
+export const GALERA = {
+  eyebrow: 'o motivo de tudo isso',
+  title: 'A gente.',
+  text: 'Lugar a gente escolhe no voto. O que faz a viagem valer é quem vai estar lá. Então, antes de decidir, um lembrete de com quem é essa bagunça:',
+  end: 'Janeiro é com vocês.',
+}
+
 /* Quanto entra no caixa com N pessoas (os 2 organizadores pagam R$ 600). */
 export const caixa = (n) =>
   (n - TRIP.organizers) * TRIP.price + TRIP.organizers * TRIP.organizerPrice
@@ -66,6 +74,18 @@ export const VIBES = {
       '3.000 m² só pra gente. Campeonato de futebol na grama, mergulho na piscina com cascata, futebol de sabão escorregando à tarde, sinuca no salão e churrasco no fogão a lenha.',
     doing: ['campeonato na grama', 'piscina com cascata', 'futsabão inflável', 'sinuca', 'churrasco no fogão a lenha'],
     stay: 'Cabe até 15 com folga: 3 quartos, 8 camas + colchões extras e 3 banheiros.',
+    // "imagina só": o sábado contado hora a hora (aparece logo depois das fotos)
+    story: {
+      title: 'Imagina o sábado',
+      beats: [
+        ['15h', 'Time escolhido no par ou ímpar e alguém já jurando que tá "sem ritmo".'],
+        ['17h', 'Futsabão. Ninguém para em pé, todo mundo chora de rir.'],
+        ['18h30', 'Tira o sabão na cascata da piscina enquanto o sol vai embora.'],
+        ['20h', 'Cheiro de fogão a lenha, churrasco saindo e sinuca valendo nada.'],
+        ['23h', 'O violão aparece. Ninguém sabe a letra inteira e todo mundo canta.'],
+      ],
+      end: 'A casa inteira só pra gente, e cabe todo mundo junto debaixo do mesmo teto.',
+    },
     link: 'https://www.airbnb.com.br/rooms/804996807567433942',
     linkLabel: 'Ver o anúncio no Airbnb',
     photos: [
@@ -122,6 +142,17 @@ export const VIBES = {
       'Acampamento chique no meio da mata: 5 cabanas de madeira, roda de fogueira debaixo das estrelas, cinema ao ar livre no telão e mesa de ping-pong.',
     doing: ['roda de fogueira', 'sarau com violão', 'cinema no telão', 'ping-pong', 'noite estrelada'],
     stay: '5 cabanas com colchão de casal — até 10 nas cabanas, acima disso a gente combina colchão extra. Cozinha e banheiros compartilhados. Não tem piscina nem campo.',
+    story: {
+      title: 'Imagina a noite',
+      beats: [
+        ['18h', 'Chega, larga a mochila e cada um escolhe sua cabana de madeira.'],
+        ['19h30', 'Sempre tem um que se acha especialista em acender fogueira.'],
+        ['21h', 'Violão e ukulele na roda. Quem não canta bate palma fora do tempo.'],
+        ['23h', 'Filme no telão no meio do mato, todo mundo embolado no cobertor.'],
+        ['2h', 'O varal de luzinha aceso e o céu cheio da estrela que a cidade esconde.'],
+      ],
+      end: 'É o tipo de noite que vira história contada em todo encontro depois.',
+    },
     link: 'https://www.airbnb.com.br/rooms/1726935758701641036',
     linkLabel: 'Ver o anúncio no Airbnb',
     photos: [
