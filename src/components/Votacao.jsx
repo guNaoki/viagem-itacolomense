@@ -12,10 +12,12 @@ import './Votacao.css'
 */
 const { min: MIN, base: GOAL, max: MAX } = TRIP.people
 
+// "talvez" entra na conta total, mas aparece hachurado (ainda não é certeza)
 function QuemVai({ people }) {
   const ins = people.filter((p) => p.presence === 'in')
   const maybe = people.filter((p) => p.presence === 'maybe')
-  const n = ins.length
+  const sure = ins.length
+  const n = sure + maybe.length
   let msg
   if (n < MIN) msg = <>faltam <b>{MIN - n}</b> pro mínimo ({MIN}) e <b>{GOAL - n}</b> pra fechar em {GOAL}</>
   else if (n < GOAL) msg = <>já dá pra ir! faltam <b>{GOAL - n}</b> pra fechar em {GOAL}</>
@@ -29,12 +31,18 @@ function QuemVai({ people }) {
         <strong className="display">{n}</strong>
         <span className="qv__of">de <b>{GOAL}</b></span>
       </p>
-      <ol className="qv__slots" aria-label={`${n} confirmados de ${GOAL}`}>
+      {maybe.length > 0 && (
+        <p className="qv__split">
+          <i className="qv__key is-in" /> {sure} {sure === 1 ? 'confirmado' : 'confirmados'}
+          <i className="qv__key is-maybe" /> {maybe.length} talvez
+        </p>
+      )}
+      <ol className="qv__slots" aria-label={`${sure} confirmados e ${maybe.length} talvez, de ${GOAL}`}>
         {Array.from({ length: Math.max(MAX, n) }, (_, i) => (
           <li
             key={i}
-            className={`qv__slot ${i < n ? 'is-in' : ''} ${i >= GOAL ? 'is-extra' : ''} ${i === MIN - 1 ? 'is-min' : ''} ${i === GOAL - 1 ? 'is-goal' : ''}`}
-            title={ins[i]?.name}
+            className={`qv__slot ${i < sure ? 'is-in' : i < n ? 'is-maybe' : ''} ${i >= GOAL ? 'is-extra' : ''} ${i === MIN - 1 ? 'is-min' : ''} ${i === GOAL - 1 ? 'is-goal' : ''}`}
+            title={i < sure ? ins[i]?.name : maybe[i - sure]?.name}
           >
             {i === MIN - 1 && <span className="qv__mark hand">mínimo</span>}
             {i === GOAL - 1 && <span className="qv__mark hand">meta</span>}
@@ -42,10 +50,10 @@ function QuemVai({ people }) {
         ))}
       </ol>
       <p className="qv__msg">{msg}</p>
-      {ins.length > 0 && (
+      {n > 0 && (
         <p className="qv__names hand">
           {ins.map((p) => p.name).join(' · ')}
-          {maybe.length > 0 && <span className="qv__maybe"> — talvez: {maybe.map((p) => p.name).join(' · ')}</span>}
+          {maybe.length > 0 && <span className="qv__maybe">{sure ? ' — ' : ''}talvez: {maybe.map((p) => p.name).join(' · ')}</span>}
         </p>
       )}
     </div>
