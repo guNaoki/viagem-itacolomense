@@ -62,7 +62,7 @@ Instruções de uso pra humanos estão no README.md; este arquivo é o contexto 
   Se faltar dinheiro, mostra o limite tracejado e o texto em laranja. Item com `minPeople` sai da conta abaixo desse número
   (futsabão da chácara só com 12+; com 9 aparece o aviso `cutNote`).
 
-- **Votação** (`Votacao.jsx` dentro do `Outro`, `src/lib/votes.js`): contador "quem vai" (meta 12, mínimo 9, teto 15; "talvez" soma no total e aparece hachurado),
+- **Votação ENCERRADA (chácara venceu, reserva feita no Airbnb)**: só sobrou o "quem vai" (nome + tô dentro/talvez/não dá); placar virou "resultado final". Hero CTA = "Tô dentro?". Histórico: **Votação** (`Votacao.jsx` dentro do `Outro`, `src/lib/votes.js`): contador "quem vai" (meta 12, mínimo 9, teto 15; "talvez" soma no total e aparece hachurado),
   cédula (nome, se vai, topo/pode ser/não curto pra cada vibe) e placar (topo 1, pode ser ½). Dados numa planilha do
   Google via Apps Script (`scripts/votacao.gs`, passo a passo no README): POST em `text/plain` (sem checagem de CORS),
   `LockService` no script, leitura a cada 12 s só com aba visível e seção por perto. Ligada na planilha do dono (`TRIP.voteUrl`). Sem `voteUrl` = modo prévia

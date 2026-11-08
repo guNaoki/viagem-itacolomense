@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { TRIP, VIBES, VIBE_ORDER } from '../data/trip'
 import { useVotes, PRESENCE, CHOICES, PREVIEW } from '../lib/votes'
-import { small } from '../lib/img'
 import './Votacao.css'
 
 /*
   Votação dentro do "Bora?":
+   (votação das vibes encerrada: a chácara venceu; sobrou só o quem vai)
    1) Quem vai: contador até 12 (meta), com o mínimo (9) e o teto (15) marcados
    2) Cédula: nome, se vai, e uma nota pra cada vibe (topo / pode ser / não curto)
    3) Como tá: placar das vibes (topo = 1 ponto, pode ser = meio, não curto = 0)
@@ -63,14 +63,12 @@ function QuemVai({ people }) {
 function Cedula({ myName, mine, vote }) {
   const [name, setName] = useState(myName)
   const [presence, setPresence] = useState(mine?.presence || '')
-  const [votes, setVotes] = useState(mine?.votes || {})
   const [state, setState] = useState('') // '' | saving | saved | error
 
   // quando a planilha responde com o meu voto antigo, preenche a cédula
   useEffect(() => {
     if (!mine) return
     setPresence((p) => p || mine.presence || '')
-    setVotes((v) => (Object.keys(v).length ? v : mine.votes || {}))
   }, [mine])
 
   const ready = name.trim() && presence
@@ -78,7 +76,7 @@ function Cedula({ myName, mine, vote }) {
     e.preventDefault()
     if (!ready) return
     setState('saving')
-    const ok = await vote({ name: name.trim().slice(0, 40), presence, votes })
+    const ok = await vote({ name: name.trim().slice(0, 40), presence, votes: mine?.votes || {} })
     setState(ok ? 'saved' : 'error')
   }
   const touch = (fn) => (...a) => {
@@ -89,7 +87,7 @@ function Cedula({ myName, mine, vote }) {
   return (
     <form className="ced" onSubmit={send}>
       <span className="tape" style={{ top: -12, left: 40, transform: 'rotate(-4deg)' }} />
-      <p className="ced__h hand">{mine ? 'teu voto (dá pra mudar)' : 'teu voto'}</p>
+      <p className="ced__h hand">{mine ? 'tua resposta (dá pra mudar)' : 'tua resposta'}</p>
 
       <label className="ced__row">
         <span className="ced__lbl">1. teu nome</span>
@@ -116,44 +114,15 @@ function Cedula({ myName, mine, vote }) {
         <p className="ced__hint">{TRIP.notes.confirm}</p>
       </fieldset>
 
-      <fieldset className="ced__row">
-        <legend className="ced__lbl">3. o que tu acha de cada uma?</legend>
-        <ul className="ced__vibes">
-          {VIBE_ORDER.map((id) => {
-            const v = VIBES[id]
-            return (
-              <li key={id} className="ced__vibe" data-v={id}>
-                <img src={small(v.photos[0].src)} alt="" loading="lazy" decoding="async" />
-                <span className="ced__vname display">{v.short}</span>
-                <div className="pills pills--sm" role="radiogroup" aria-label={`Nota pra ${v.short}`}>
-                  {CHOICES.map((c) => (
-                    <button
-                      key={c.id}
-                      type="button"
-                      role="radio"
-                      aria-checked={votes[id] === c.id}
-                      className={`pill pill--${c.id}`}
-                      onClick={touch(() => setVotes((o) => ({ ...o, [id]: o[id] === c.id ? '' : c.id })))}
-                    >
-                      {c.label}
-                    </button>
-                  ))}
-                </div>
-              </li>
-            )
-          })}
-        </ul>
-      </fieldset>
-
       <div className="ced__send">
         <button type="submit" className="btn" disabled={!ready || state === 'saving'}>
-          {state === 'saving' ? 'mandando…' : mine ? 'atualizar meu voto' : 'mandar meu voto'}
+          {state === 'saving' ? 'mandando…' : mine ? 'atualizar' : 'confirmar'}
           <span className="btn__dot" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
           </span>
         </button>
         <p className={`ced__state hand is-${state || 'idle'}`} aria-live="polite">
-          {state === 'saved' && 'voto salvo! valeu'}
+          {state === 'saved' && 'salvo! valeu'}
           {state === 'error' && 'não foi… tenta de novo?'}
           {!state && !ready && (name.trim() ? 'falta dizer se vai' : 'começa pelo nome')}
         </p>
@@ -175,7 +144,8 @@ function ComoTa({ people }) {
 
   return (
     <div className="ct">
-      <p className="ct__h hand">como tá</p>
+      <p className="ct__h hand">resultado final</p>
+      <p className="ct__win display">A <em>chácara</em> venceu!</p>
       <ol className="ct__list">
         {sorted.map((r) => (
           <li key={r.id} className={`ct__row ${r.score === best && best > 0 ? 'is-lead' : ''}`} data-v={r.id}>
@@ -195,7 +165,7 @@ function ComoTa({ people }) {
           </li>
         ))}
       </ol>
-      <p className="ct__how">topo vale 1 ponto, pode ser vale meio e não curto não soma. Ganha a que ninguém rejeita, não a que divide a galera.</p>
+      <p className="ct__how">votação encerrada. Valeu por votar, galera!</p>
     </div>
   )
 }

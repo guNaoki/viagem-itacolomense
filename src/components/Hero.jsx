@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useTrip } from '../lib/trip-context'
 import { gsap, SplitText, useGSAP, reduceMotion, drawIn } from '../lib/gsap'
 import { useFitText } from '../lib/useFitText'
@@ -6,7 +6,7 @@ import { TRIP } from '../data/trip'
 import Countdown from './Countdown'
 import Doodle from './Doodle'
 import Icon from './Icons'
-import ConfirmVote from './ConfirmVote'
+import { scrollToEl } from '../lib/scroll'
 import Mbapeso from './Mbapeso'
 import './Hero.css'
 
@@ -14,8 +14,6 @@ export default function Hero() {
   const { v } = useTrip()
   const scope = useRef(null)
   const jan = useRef(null)
-  const [asking, setAsking] = useState(false)
-  const closeAsk = useCallback(() => setAsking(false), [])
   useFitText(jan, { max: 330, ratio: 0.97 })
 
   // entrada cinematográfica (espera as fontes pra cortar as letras no lugar certo)
@@ -94,8 +92,8 @@ export default function Hero() {
           <div className="hero__col hero__col--right">
             <Countdown />
             <div className="hero__go">
-              <button type="button" className="btn hero__cta" onClick={() => setAsking(true)}>
-                Bora votar
+              <button type="button" className="btn hero__cta" onClick={() => scrollToEl('#votacao', { offset: -60 })}>
+                Tô dentro?
                 <span className="btn__dot"><Icon name="arrowDown" size={20} /></span>
               </button>
               <Mbapeso caption="o Mbapeso tá dentro" className="mbapeso--hero" />
@@ -105,7 +103,6 @@ export default function Hero() {
               <span className="hero__alert-dot" aria-hidden="true" />
               {TRIP.alert}
             </p>
-            {asking && <ConfirmVote onClose={closeAsk} />}
           </div>
         </div>
       </div>

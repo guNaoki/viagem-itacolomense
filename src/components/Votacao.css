@@ -132,3 +132,5 @@
 .ct__detail { grid-column: 1 / -1; font-size: 14px; color: var(--ink-2); }
 .ct__lead { display: inline-block; margin-left: 10px; font-size: 22px; font-weight: 600; letter-spacing: 0; color: var(--ember); transform: translateY(-0.5em) rotate(-6deg); }
 .ct__how { margin: 22px 0 0; font-size: 14px; color: var(--ink-2); max-width: 32em; }
+.ct__win { margin: 0 0 18px; font-size: clamp(26px, 5vw, 34px); line-height: 1.05; }
+.ct__win em { color: var(--accent-ink); }
