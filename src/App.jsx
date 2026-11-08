@@ -11,6 +11,7 @@ import VibePicker from './components/VibePicker'
 import Journey from './components/Journey'
 import RouteSection from './components/RouteSection'
 import Money from './components/Money'
+import Combinados from './components/Combinados'
 import Outro from './components/Outro'
 import VibeFlood from './components/VibeFlood'
 
@@ -38,6 +39,7 @@ function Page() {
         <Journey />
         <RouteSection />
         <Money />
+        <Combinados />
         <Outro />
       </main>
       <Dock />

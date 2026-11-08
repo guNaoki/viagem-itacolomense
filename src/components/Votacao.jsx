@@ -50,6 +50,11 @@ function QuemVai({ people }) {
         ))}
       </ol>
       <p className="qv__msg">{msg}</p>
+      {maybe.length > 0 && (
+        <a className="qv__ping hand" href={`https://wa.me/?text=${encodeURIComponent(`Galera, a chácara tá reservada! Ainda tão no "talvez": ${maybe.map((p) => p.name).join(', ')}. ${TRIP.combinados.confirmBy ? `Fecha até ${TRIP.combinados.confirmBy}: ` : 'Bora fechar a lista: '}${location.origin}/#votacao`)}`} target="_blank" rel="noopener noreferrer">
+          chamar os {maybe.length} do talvez no zap →
+        </a>
+      )}
       {n > 0 && (
         <p className="qv__names hand">
           {ins.map((p) => p.name).join(' · ')}

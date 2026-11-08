@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useTrip } from '../lib/trip-context'
-import { VIBES, VIBE_ORDER } from '../data/trip'
+import { VIBES } from '../data/trip'
 import { gsap, useGSAP, reduceMotion, drawIn } from '../lib/gsap'
 import { useReveal } from '../lib/useReveal'
 import Mural from './Mural'
@@ -9,13 +9,6 @@ import { Unique, AntesDepois } from './Romance'
 import Icon from './Icons'
 import { srcSetOf } from '../lib/img'
 import './VibePicker.css'
-
-// origem da "inundação" de cor: o ponto do toque (ou o centro do botão, no teclado)
-const originOf = (e) => {
-  const r = e.currentTarget.getBoundingClientRect()
-  const kb = !e.clientX && !e.clientY
-  return { x: kb ? r.left + r.width / 2 : e.clientX, y: kb ? r.top + r.height / 2 : e.clientY }
-}
 
 function Detail({ v }) {
   const ref = useRef(null)
@@ -43,7 +36,7 @@ function Detail({ v }) {
   return (
     <div className="vd" ref={ref}>
       <header className="vd__head">
-        <p className="vd__now hand">vendo agora · opção {v.n.replace('0', '')} de 3</p>
+        <p className="vd__now hand">a escolhida</p>
         <h3 className="vd__name display">{v.name}</h3>
         <p className="vd__place">{v.place} — <span className="hand">{v.kicker}</span></p>
       </header>
@@ -85,7 +78,7 @@ function Detail({ v }) {
 }
 
 export default function VibePicker() {
-  const { vibe, chooseVibe } = useTrip()
+  const { vibe } = useTrip()
   const scope = useRef(null)
   useReveal(scope)
   const v = VIBES[vibe]
@@ -93,44 +86,13 @@ export default function VibePicker() {
   return (
     <section className="sec picker" id="vibe" ref={scope}>
       <div className="wrap">
-        <p className="eyebrow">passo 1 — escolhe aí</p>
+        <p className="eyebrow">a nossa casa</p>
         <h2 className="display h2 picker__title" data-split>
-          Qual é a <em>nossa vibe?</em>
+          A <em>chácara</em> venceu.
         </h2>
         <p className="lede picker__lede" data-rise>
-          Três opções na mesa, nenhuma decidida. Toca em cada uma: o site inteiro muda pra mostrar como seria o fim de semana lá.
+          Reserva feita no Airbnb. Aqui está o que a gente escolheu: o lugar, o que rola e como vai ser o fim de semana.
         </p>
-
-        <div className="cards" role="radiogroup" aria-label="Escolha a vibe" id="vibe-cards" data-rise>
-          {VIBE_ORDER.map((id) => {
-            const c = VIBES[id]
-            const on = vibe === id
-            return (
-              <button
-                key={id}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                className={`vcard ${on ? 'is-on' : ''}`}
-                data-v={id}
-                onClick={(e) => chooseVibe(id, { ...originOf(e), scrollTo: '#vibe' })}
-              >
-                <span className="vcard__img">
-                  <img src={c.photos[0].src} srcSet={srcSetOf(c.photos[0].src)} sizes="(min-width: 900px) 400px, 32vw" alt="" loading="lazy" decoding="async" />
-                </span>
-                <span className="vcard__shade" aria-hidden="true" />
-                <span className="vcard__radio" aria-hidden="true" />
-                <span className="vcard__tag">vendo agora</span>
-                <span className="vcard__txt">
-                  <span className="vcard__n hand">opção {c.n.replace('0', '')}</span>
-                  <span className="vcard__name display">{c.short}</span>
-                  <span className="vcard__kicker hand">{c.kicker}</span>
-                </span>
-              </button>
-            )
-          })}
-        </div>
-        <p className="cards__hint hand" aria-hidden="true">toca nas outras pra comparar ↑</p>
 
         <Detail key={vibe} v={v} />
       </div>

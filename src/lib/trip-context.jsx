@@ -1,14 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { VIBES, VIBE_ORDER } from '../data/trip'
+import { VIBES, CHOSEN } from '../data/trip'
 import { sky } from '../gl/sky-state'
 import { gsap, reduceMotion } from './gsap'
 
 const Ctx = createContext(null)
 
-const readVibe = () => {
-  const v = new URLSearchParams(location.search).get('vibe')
-  return VIBE_ORDER.includes(v) ? v : 'chacara'
-}
+const readVibe = () => CHOSEN
 
 function tweenSky(v, instant) {
   const s = VIBES[v].sky

@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTrip } from '../lib/trip-context'
-import { TRIP, VIBES, VIBE_ORDER, caixa } from '../data/trip'
+import { TRIP, caixa } from '../data/trip'
 import { useReveal } from '../lib/useReveal'
 import { gsap, useGSAP, reduceMotion } from '../lib/gsap'
 import Doodle from './Doodle'
@@ -212,7 +212,6 @@ export default function Money() {
   )
 
   const total = caixa(n)
-  const others = VIBE_ORDER.filter((id) => id !== vibe)
 
   return (
     <section className="sec money" id="caixa" ref={scope}>
@@ -260,16 +259,6 @@ export default function Money() {
           <p className="money__label">{v.budget.label}</p>
           <Bar budget={v.budget} total={total} n={n} />
 
-          <details className="money__others">
-            <summary>
-              <span>ver como fica nas outras vibes</span>
-            </summary>
-            <div className="money__others-in">
-              {others.map((id) => (
-                <Bar key={id} budget={VIBES[id].budget} total={total} n={n} compact name={VIBES[id].budget.label} />
-              ))}
-            </div>
-          </details>
           <p className="money__neutral">Os gastos já estão contados; o que muda com o número de gente é quanto sobra pra comida e bebida. Troca ali em cima entre 9, 12 e 15 pra ver.</p>
         </div>
       </div>

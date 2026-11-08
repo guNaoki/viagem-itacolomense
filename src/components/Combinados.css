@@ -1,0 +1,23 @@
+.cmb__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 34px; margin-top: 34px; }
+@media (min-width: 900px) { .cmb__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 44px; } .cmb__card--wide { grid-column: 1 / -1; } }
+.cmb__card { position: relative; background: #fffdf7; color: #1c1917; padding: 24px 22px 22px; box-shadow: 0 1px 1px rgba(28, 25, 23, 0.08), 0 18px 34px -18px rgba(120, 60, 10, 0.4); }
+.cmb__card:nth-child(odd) { transform: rotate(-0.5deg); }
+.cmb__card:nth-child(even) { transform: rotate(0.5deg); }
+.cmb__h { margin: 0 0 12px; font-size: clamp(28px, 5vw, 36px); color: #047857; transform: rotate(-1.5deg); width: max-content; max-width: 100%; }
+.cmb__dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 16px; font-size: 16px; }
+.cmb__dl dt { font-weight: 800; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; padding-top: 3px; }
+.cmb__dl dd { margin: 0; }
+.cmb__dl a { color: #047857; font-weight: 700; }
+.cmb__soon { color: #b8430a; font-size: 20px; }
+.cmb__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.cmb__list label { display: flex; align-items: center; gap: 12px; padding: 9px 2px; cursor: pointer; font-size: 16px; min-height: 44px; }
+.cmb__list input { width: 22px; height: 22px; flex: none; accent-color: #10b981; }
+.cmb__list input:checked + span { text-decoration: line-through; opacity: 0.5; }
+.cmb__qty { margin-left: auto; padding-left: 10px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cmb__list--shop { margin-top: 14px; }
+@media (min-width: 900px) { .cmb__list--shop { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; } }
+.cmb .seg-pick { margin-top: 4px; }
+.cmb__fine { margin: 14px 0 0; font-size: 13px; opacity: 0.65; }
+.cmb__pix { margin: 0; font-size: 18px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; word-break: break-all; }
+.cmb__pix small { flex-basis: 100%; font-size: 13px; opacity: 0.65; }
+.cmb__copy { font-size: 22px; color: #047857; text-decoration: underline; text-underline-offset: 3px; padding: 6px 4px; }

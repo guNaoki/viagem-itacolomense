@@ -123,3 +123,11 @@ confirmar fluidez num celular de verdade (`npm run dev` + IP da rede).
 ## Git
 - Branch `main`; autor `GUSTAVO NAOKI IDA <gunaoki.ida@gmail.com>`.
 - Commits em pt-BR, descrevendo o que mudou pra quem usa o site.
+
+## Fase "chácara fechada" (branch claude/chacara-fechada, fora da main até o dono revisar)
+- `CHOSEN` em `trip.js`: o site só mostra a chácara (sem cartões de vibe, sem "outras vibes" no caixa, Dock com 1 botão).
+  As outras vibes seguem no `trip.js` só pro "resultado final" da votação.
+- `Combinados.jsx` (`TRIP.combinados`): endereço, chegada, saída, o que levar, compras do churrasco por nº de pessoas e pix.
+  Campo vazio = "a gente confirma aqui". Marcações (levei/comprei) só no localStorage.
+- "Quem vai" tem link do zap pra chamar os "talvez" (`TRIP.combinados.confirmBy` entra na mensagem).
+- `og.jpg` novo ("A chácara venceu!"), `?v=4`.

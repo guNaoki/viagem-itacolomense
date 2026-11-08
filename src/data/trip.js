@@ -8,6 +8,9 @@
 import { FOLDER_PHOTOS } from './photos'
 import { withSrcSet } from '../lib/img'
 
+// a vibe que ganhou a votação: o site inteiro fica nela
+export const CHOSEN = 'chacara'
+
 export const TRIP = {
   // Contagem regressiva: até quando? (fuso de Brasília)
   // data da viagem: sábado 30/01 a segunda 01/02 (a única data livre da chácara)
@@ -16,6 +19,27 @@ export const TRIP = {
   countdownLabel: 'pro dia 30 chegar',
   // alerta no topo do site
   alert: 'A chácara venceu e a reserva já tá feita! Agora falta só confirmar quem vai: marca lá embaixo se tá dentro, talvez ou não dá.',
+  // combinados da chácara: o que estiver vazio ('') aparece como "a gente confirma aqui"
+  combinados: {
+    address: '', // endereço completo
+    mapUrl: '', // link do Google Maps
+    arrival: '', // ex.: 'sáb 30/01, a partir das 10h'
+    leave: '', // ex.: 'seg 01/02, saída até as 12h'
+    pix: { key: '', name: '' }, // chave pix pro R$ 300
+    confirmBy: '', // ex.: 'sexta, 20/11' (entra na mensagem de cobrar os "talvez")
+    levar: ['Documento com foto', 'Toalha de banho', 'Roupa de piscina e protetor solar', 'Chinelo', 'Casaco pra noite (janeiro na serra esfria)', 'Carregador e power bank', 'Violão, caixinha de som, o que animar o sarau', 'Bola, raquete, baralho: o que tiver'],
+    // compras do churrasco: gramas ou unidades POR PESSOA
+    compras: [
+      { t: 'Carne (picanha, fraldinha, costela)', per: 0.4, un: 'kg' },
+      { t: 'Linguiça e frango', per: 0.2, un: 'kg' },
+      { t: 'Pão de alho e pão francês', per: 2, un: 'un' },
+      { t: 'Cerveja (lata)', per: 8, un: 'un' },
+      { t: 'Refri e água', per: 1.5, un: 'L' },
+      { t: 'Carvão e lenha', per: 0.5, un: 'kg' },
+      { t: 'Gelo', per: 2, un: 'kg' },
+    ],
+    rides: 'Quem tem carro com lugar sobrando avisa no grupo, e quem precisa de carona também. Gasolina sai do caixa.',
+  },
   // frases que deixam explícito o que pode gerar dúvida
   notes: {
     // embaixo do "R$ 300 por pessoa"

@@ -134,3 +134,4 @@
 .ct__how { margin: 22px 0 0; font-size: 14px; color: var(--ink-2); max-width: 32em; }
 .ct__win { margin: 0 0 18px; font-size: clamp(26px, 5vw, 34px); line-height: 1.05; }
 .ct__win em { color: var(--accent-ink); }
+.qv__ping { display: inline-block; margin: 8px 0 0; font-size: 24px; color: var(--accent-ink); text-decoration: underline; text-underline-offset: 4px; padding: 6px 0; }

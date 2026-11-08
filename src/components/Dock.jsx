@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTrip } from '../lib/trip-context'
-import { VIBES, VIBE_ORDER } from '../data/trip'
+import { VIBES, CHOSEN } from '../data/trip'
 import { scrollToEl, onScrollY } from '../lib/scroll'
 import { gsap, ScrollTrigger, useGSAP } from '../lib/gsap'
 import './Dock.css'
 
 const SECTIONS = [
   { id: 'topo', label: 'Início' },
-  { id: 'vibe', label: 'As 3 vibes' },
+  { id: 'vibe', label: 'A chácara' },
   { id: 'jornada', label: 'O fim de semana' },
   { id: 'rota', label: 'A estrada' },
   { id: 'caixa', label: 'O caixa' },
-  { id: 'votacao', label: 'Votar' },
+  { id: 'combinados', label: 'Combinados' },
+  { id: 'votacao', label: 'Quem vai' },
 ]
 
 // Navbar inferior: seletor das 3 vibes + menu de seções.
@@ -76,7 +77,7 @@ export default function Dock() {
       <div className="dock__bar">
         <div className="dock__seg" role="radiogroup" aria-label="Trocar a vibe" ref={seg}>
           <span className="dock__blob" ref={blob} aria-hidden="true" />
-          {VIBE_ORDER.map((id) => (
+          {[CHOSEN].map((id) => (
             <button
               key={id}
               type="button"
